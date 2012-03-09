@@ -4,10 +4,24 @@
  */
 package cz.cvut.generator.core;
 
+import cz.cvut.generator.graph.Graph;
+
 /**
  *
  * @author ZDENEK
  */
-public class Generator {
+public class Generator implements GeneratorOutputI {
+    Graph g;
+    
+    Generator(){
+        
+    }
+
+    @Override
+    public Graph getGraph() {
+        return g;
+    }
+    
+    
     
 }

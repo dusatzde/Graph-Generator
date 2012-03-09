@@ -4,6 +4,7 @@
  */
 package cz.cvut.generator.graph;
 
+import cz.cvut.generator.core.GeneratorOutputI;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * @author ZDENEK
  */
 public class Graph implements GraphConfigI {
-    
+
     private boolean directed;
     private List<Edge> edges;
     private List<Node> nodes;
@@ -34,4 +35,14 @@ public class Graph implements GraphConfigI {
     public void setEdges(List<Edge> edges) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public List<Node> getNodes() {
+        return this.nodes;
+    }
+
+    public List<Edge> getEdges() {
+        return this.edges;
+    }
+
+
 }
