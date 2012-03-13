@@ -9,5 +9,5 @@ package cz.cvut.generator.graph;
  * @author ZDENEK
  */
 public enum GraphType {
-    DISCRETE, TREE, WEIGHTED, DIRECTED, COMPLETE, CYCLIC, BIPARTITE
+    DISCRETE, TREE, WEIGHTED, DIRECTED, COMPLETE, CYCLIC, ACYCLIC, BIPARTITE, SIMPLE
 }
