@@ -14,11 +14,11 @@ import java.util.List;
  *
  * @author Lenovo
  */
-public class GraphOutput{
+public class OutputParser{
     Generator gen;
     OutputType ot;
     
-    GraphOutput(Generator gen, OutputType ot){
+    OutputParser(Generator gen, OutputType ot){
         this.gen = gen;
         this.ot = ot;
     }
