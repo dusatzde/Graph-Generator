@@ -11,6 +11,11 @@ package cz.cvut.generator.graph;
 public class Node {
     private long id;
     private String label;
+    
+    public Node(long id, String label){
+        this.id = id;
+        this.label = label;
+    }
 
     public long getId() {
         return id;
