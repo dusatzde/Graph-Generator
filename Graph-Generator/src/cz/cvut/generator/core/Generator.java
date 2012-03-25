@@ -38,6 +38,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     
     public void initialize(){
         generateNodes();
+        edgeList = new ArrayList<Edge>();
         if(properties.contains(GraphType.DIRECTED))directed = true;
         if(properties.contains(GraphType.WEIGHTED))weighted = true;
     }
@@ -56,17 +57,32 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
             nodes[rna] = nodes[rnb];
             nodes[rnb] = tmp;            
         }
-        nodeList = new ArrayList<Node>();
-        nodeList = (ArrayList<Node>) Arrays.asList(nodes);
+        nodeList = new ArrayList<Node>(Arrays.asList(nodes));
     }
     
     public void generateFull(){
-        double weight = 0;
         for(int i = 0; i < nodeCount; i++){
             for(int j = i+1; j < nodeCount; j++){
-                if(weighted)weight = rand.nextDouble() * (maxWeight - minWeight) + minWeight;
-                edgeList.add(new Edge(nodes[i], nodes[j], weight));
+                edgeList.add(new Edge(nodes[i], nodes[j]));
             }
+        }
+    }
+    
+    public void generateSimple(){
+        ArrayList<Node> notUsed = new ArrayList<Node>(Arrays.asList(nodes));
+        ArrayList<Node> connectedPart = new ArrayList<Node>();
+        Node a = notUsed.remove(rand.nextInt(notUsed.size()));
+        Node b = notUsed.remove(rand.nextInt(notUsed.size()));
+        edgeList.add(new Edge(a, b));
+        connectedPart.add(a);
+        connectedPart.add(b);
+        while(!notUsed.isEmpty()){
+            a = notUsed.remove(rand.nextInt(notUsed.size()));
+            b = connectedPart.get(rand.nextInt(connectedPart.size()));
+            //switching orientation
+            if(rand.nextInt() == 0) edgeList.add(new Edge(a, b));
+            else edgeList.add(new Edge(b, a));
+            connectedPart.add(a);            
         }
     }
     
@@ -83,7 +99,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         }
         for(int i = 0; i < nodeCount; i++){
             for(int j = i+1; j < nodeCount; j++){
-                edges.add(new Edge(nodes[i], nodes[j], (double)(i+j)));
+                edges.add(new Edge(nodes[i], nodes[j]));
             }
         }
         
@@ -93,6 +109,11 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     }
     
     private void prepareOutputGraph(){
+        if(weighted){
+            for(Edge e: edgeList){
+            e.setWeight(rand.nextDouble() * (maxWeight - minWeight) + minWeight);
+            }
+        }        
         g.setEdges(edgeList);
         g.setNodes(nodeList);
         g.setDirected(directed);

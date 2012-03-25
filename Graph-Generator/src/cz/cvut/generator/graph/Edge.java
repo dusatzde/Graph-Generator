@@ -10,17 +10,24 @@ package cz.cvut.generator.graph;
  */
 public class Edge {
     
-    public Edge(Node from, Node to, double weight){
+    public Edge(Node from, Node to){
         this.from = from;
         this.to = to;
-        this.weight = weight;
+        weight = 0;
     }
     
     private Node from;
     private Node to;
     private double weight;
     
+    public void setWeight(double weight){
+                this.weight = weight;
+
+    }
     
-    
+    @Override
+    public String toString(){
+        return "from: " + from.getId() + " to: " + to.getId() + " weight: " + weight;
+    }
     
 }

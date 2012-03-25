@@ -28,12 +28,12 @@ public class Graph implements GraphConfigI {
 
     @Override
     public void setNodes(List<Node> nodes) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.nodes = nodes;
     }
 
     @Override
     public void setEdges(List<Edge> edges) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.edges = edges;
     }
 
     public List<Node> getNodes() {
