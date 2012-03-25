@@ -9,10 +9,10 @@ package cz.cvut.generator.graph;
  * @author ZDENEK
  */
 public class Node {
-    private long id;
+    private int id;
     private String label;
     
-    public Node(long id, String label){
+    public Node(int id, String label){
         this.id = id;
         this.label = label;
     }
@@ -21,7 +21,7 @@ public class Node {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

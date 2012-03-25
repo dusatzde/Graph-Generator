@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface GeneratorConfigI {
     
-    public void setNodesCount(long nodeCount);
+    public void setNodesCount(int nodeCount);
     public void setProperties(List<GraphType> property);
     public void setMinEdgeWeight(double weight);
     public void setMaxEdgeWeight(double weight);
