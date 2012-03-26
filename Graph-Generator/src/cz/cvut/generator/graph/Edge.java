@@ -30,4 +30,12 @@ public class Edge {
         return "from: " + from.getId() + " to: " + to.getId() + " weight: " + weight;
     }
     
+    public Node getNodeFrom(){
+        return this.from;
+    }
+    
+    public Node getNodeTo(){
+        return this.to;
+    }
+    
 }

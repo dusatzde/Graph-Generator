@@ -8,6 +8,9 @@ import cz.cvut.generator.core.Generator;
 import cz.cvut.generator.graph.Edge;
 import cz.cvut.generator.graph.Graph;
 import cz.cvut.generator.graph.GraphType;
+import cz.cvut.generator.graph.OutputParser;
+import cz.cvut.generator.graph.OutputType;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +23,7 @@ public class GraphGenerator {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         /*
          * TOTO MUZETE SAMOZREJME SMAZAT
          */
@@ -34,11 +37,7 @@ public class GraphGenerator {
         g.initialize();
         g.generateSimple();
         Graph graf = g.getGraph();
-        int count = 0;
-        for(Edge e: graf.getEdges()){
-            System.out.println(e);
-            count++;
-        }
-        System.out.println("count: " + count);
+        OutputParser op = new OutputParser(g, OutputType.TRIVIAL);
+        op.generateOutput();
     }
 }
