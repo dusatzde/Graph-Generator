@@ -150,6 +150,10 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         this.componentCount = componentCount;
     }
     
+    public List<GraphType> getProperties(){
+        return this.properties;
+    }
+    
     
     
 }

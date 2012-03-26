@@ -33,11 +33,12 @@ public class GraphGenerator {
         g.setMinEdgeWeight(6);
         ArrayList<GraphType> prop = new ArrayList<GraphType>();
         prop.add(GraphType.WEIGHTED);
+        prop.add(GraphType.DIRECTED);
         g.setProperties(prop);
         g.initialize();
         g.generateSimple();
         Graph graf = g.getGraph();
-        OutputParser op = new OutputParser(g, OutputType.TRIVIAL);
+        OutputParser op = new OutputParser(g, OutputType.ADJACENCY);
         op.generateOutput();
     }
 }

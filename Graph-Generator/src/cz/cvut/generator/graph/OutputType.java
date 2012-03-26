@@ -9,5 +9,5 @@ package cz.cvut.generator.graph;
  * @author ZDENEK
  */
 public enum OutputType {
-    TRIVIAL, DOT
+    TRIVIAL, DOT, ADJACENCY
 }

@@ -29,6 +29,9 @@ public class OutputParser {
             case TRIVIAL:
                 generateTrivialOutput();
                 break;
+            case ADJACENCY:
+                generateAdjacencyOutput();
+                break;
             case DOT:
 
                 break;
@@ -39,7 +42,7 @@ public class OutputParser {
     }
 
     private void generateTrivialOutput() throws FileNotFoundException {
-        System.out.println("Start of generating output file");
+        System.out.println("Start of generating output file - Trivial Graph");
         PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
         Graph g = this.gen.getGraph();
         List<Node> nodes = g.getNodes();
@@ -55,6 +58,61 @@ public class OutputParser {
             Edge e = edgeIt.next();
             out.println(e.getNodeFrom().getLabel() + " " + e.getNodeTo().getLabel());
         }
+        out.close();
+    }
+
+    private void generateAdjacencyOutput() throws FileNotFoundException {
+        System.out.println("Start of generating output file - Adjacency matrix");
+        PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
+
+        Graph g = this.gen.getGraph();
+        List<GraphType> properties = gen.getProperties();
+        List<Node> nodes = g.getNodes();
+        List<Edge> edges = g.getEdges();
+        boolean weighted = false;
+        boolean directed = false;
+
+        int[][] adjacencyMatrix = new int[nodes.size()][nodes.size()];
+
+        Iterator<GraphType> it = properties.iterator();
+        while (it.hasNext()) {
+            GraphType gType = it.next();
+            if (gType == GraphType.DIRECTED) {
+                directed = true;
+            }
+            if (gType == GraphType.WEIGHTED) {
+                weighted = true;
+            }
+        }
+
+
+        Iterator<Edge> edgeIt = edges.iterator();
+        Edge e;
+        int from, to;
+
+        if (weighted) {
+            
+        } else {
+            while (edgeIt.hasNext()) {
+                e = edgeIt.next();
+                from = nodes.lastIndexOf(e.getNodeFrom());
+                to = nodes.lastIndexOf(e.getNodeTo());
+                adjacencyMatrix[from][to] = 1;
+                if (directed) {
+                    adjacencyMatrix[to][from] = -1;
+                } else {
+                    adjacencyMatrix[to][from] = 1;
+                }
+            }
+
+            for (int i = 0; i < nodes.size(); i++) {
+                for (int j = 0; j < nodes.size(); j++) {
+                    out.print(adjacencyMatrix[i][j] + " ");
+                }
+                out.println("");
+            }
+        }
+
         out.close();
     }
 }
