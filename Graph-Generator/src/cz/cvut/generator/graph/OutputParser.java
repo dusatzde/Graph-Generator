@@ -15,15 +15,15 @@ import java.util.List;
  * @author Lenovo
  */
 public class OutputParser {
-
+    
     Generator gen;
     OutputType ot;
-
+    
     public OutputParser(Generator gen, OutputType ot) {
         this.gen = gen;
         this.ot = ot;
     }
-
+    
     public void generateOutput() throws FileNotFoundException {
         switch (ot) {
             case TRIVIAL:
@@ -33,26 +33,26 @@ public class OutputParser {
                 generateAdjacencyOutput();
                 break;
             case DOT:
-
+                
                 break;
-
+            
             default:
                 System.out.println("Incorrect output type");
         }
     }
-
+    
     private void generateTrivialOutput() throws FileNotFoundException {
         System.out.println("Start of generating output file - Trivial Graph");
         PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
         Graph g = this.gen.getGraph();
         List<Node> nodes = g.getNodes();
         List<Edge> edges = g.getEdges();
-
+        
         Iterator<Node> nodeIt = nodes.iterator();
         while (nodeIt.hasNext()) {
             out.println(nodeIt.next().getLabel());
         }
-
+        
         Iterator<Edge> edgeIt = edges.iterator();
         while (edgeIt.hasNext()) {
             Edge e = edgeIt.next();
@@ -60,20 +60,25 @@ public class OutputParser {
         }
         out.close();
     }
-
+    
     private void generateAdjacencyOutput() throws FileNotFoundException {
         System.out.println("Start of generating output file - Adjacency matrix");
         PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
-
+        
         Graph g = this.gen.getGraph();
         List<GraphType> properties = gen.getProperties();
         List<Node> nodes = g.getNodes();
         List<Edge> edges = g.getEdges();
         boolean weighted = false;
         boolean directed = false;
-
-        int[][] adjacencyMatrix = new int[nodes.size()][nodes.size()];
-
+        
+        double[][] adjacencyMatrix = new double[nodes.size()][nodes.size()];
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = 0; j < nodes.size(); j++) {
+                adjacencyMatrix[i][j] = Double.MAX_VALUE;
+            }
+        }
+        
         Iterator<GraphType> it = properties.iterator();
         while (it.hasNext()) {
             GraphType gType = it.next();
@@ -84,19 +89,27 @@ public class OutputParser {
                 weighted = true;
             }
         }
-
-
+        
+        
         Iterator<Edge> edgeIt = edges.iterator();
         Edge e;
         int from, to;
-
-        if (weighted) {
-            
-        } else {
-            while (edgeIt.hasNext()) {
-                e = edgeIt.next();
-                from = nodes.lastIndexOf(e.getNodeFrom());
-                to = nodes.lastIndexOf(e.getNodeTo());
+        
+        
+        while (edgeIt.hasNext()) {
+            e = edgeIt.next();
+            from = nodes.lastIndexOf(e.getNodeFrom());
+            to = nodes.lastIndexOf(e.getNodeTo());
+            if (weighted) {
+                if (adjacencyMatrix[from][to] > e.getWeight()) {
+                    adjacencyMatrix[from][to] = e.getWeight();
+                }
+                if (!directed) {
+                    if (adjacencyMatrix[to][from] > e.getWeight()) {
+                        adjacencyMatrix[to][from] = e.getWeight();
+                    }
+                }
+            } else {
                 adjacencyMatrix[from][to] = 1;
                 if (directed) {
                     adjacencyMatrix[to][from] = -1;
@@ -104,15 +117,24 @@ public class OutputParser {
                     adjacencyMatrix[to][from] = 1;
                 }
             }
-
-            for (int i = 0; i < nodes.size(); i++) {
-                for (int j = 0; j < nodes.size(); j++) {
-                    out.print(adjacencyMatrix[i][j] + " ");
-                }
-                out.println("");
-            }
         }
-
+        
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = 0; j < nodes.size(); j++) {
+                if (adjacencyMatrix[i][j] != Double.MAX_VALUE) {
+                    out.print(adjacencyMatrix[i][j] + " ");
+                } else {
+                    if (weighted) {
+                        out.print("inf ");
+                    } else {
+                        out.print("0 ");
+                    }
+                }
+            }
+            out.println("");
+        }
+        
+        
         out.close();
     }
 }

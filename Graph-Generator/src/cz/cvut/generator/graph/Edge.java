@@ -38,4 +38,8 @@ public class Edge {
         return this.to;
     }
     
+    public double getWeight(){
+        return this.weight;
+    }
+    
 }
