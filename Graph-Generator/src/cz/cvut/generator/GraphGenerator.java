@@ -38,7 +38,7 @@ public class GraphGenerator {
         g.initialize();
         g.generateSimple();
         Graph graf = g.getGraph();
-        OutputParser op = new OutputParser(g, OutputType.ADJACENCY);
+        OutputParser op = new OutputParser(g, OutputType.INCIDENCE);
         op.generateOutput();
     }
 }

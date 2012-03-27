@@ -32,6 +32,9 @@ public class OutputParser {
             case ADJACENCY:
                 generateAdjacencyOutput();
                 break;
+            case INCIDENCE:
+                GenerateIncidenceOutput();
+                break;
             case DOT:
                 
                 break;
@@ -136,5 +139,41 @@ public class OutputParser {
         
         
         out.close();
+    }
+    
+    private void GenerateIncidenceOutput() throws FileNotFoundException{
+        System.out.println("Start of generating output file - Incidence matrix Graph");
+        PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
+        
+        Graph g = this.gen.getGraph();
+        List<Node> nodes = g.getNodes();
+        List<Edge> edges = g.getEdges();
+        Iterator<Edge> it = edges.iterator();
+        double [][] incidenceMatrix = new double[nodes.size()][edges.size()];
+        
+        for(int i = 0; i < nodes.size(); i++){
+            for(int j = 0; j < edges.size(); j++){
+                incidenceMatrix[i][j] = 0;
+            }
+        }
+        
+        
+        int j = 0;
+        Edge e;
+        while(it.hasNext()){
+            e = it.next();
+            incidenceMatrix[nodes.lastIndexOf(e.getNodeFrom())][j] = 1;
+            incidenceMatrix[nodes.lastIndexOf(e.getNodeTo())][j] = 1;
+            j++;
+        }
+        
+        for(int i = 0; i < nodes.size(); i++){
+            for(j = 0; j < edges.size(); j++){
+                out.print((int)incidenceMatrix[i][j] + " ");
+            }
+            out.println();
+        }
+        out.close();
+        
     }
 }
