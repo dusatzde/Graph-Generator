@@ -43,6 +43,11 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         if(properties.contains(GraphType.WEIGHTED))weighted = true;
     }
     
+    //TODO
+    public void generate(){
+        
+    }
+    
     private void generateNodes(){
         nodes = new Node[nodeCount];
         //creation array of nodes with id from 0 to nodeCount
@@ -60,7 +65,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         nodeList = new ArrayList<Node>(Arrays.asList(nodes));
     }
     
-    public void generateFull(){
+    public void generateComplete(){
         for(int i = 0; i < nodeCount; i++){
             for(int j = i+1; j < nodeCount; j++){
                 edgeList.add(new Edge(nodes[i], nodes[j]));
@@ -97,6 +102,27 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     }
     
     
+    //TODO
+    public void generateBipartite(){
+        
+    }
+    
+    //TODO
+    public void generateCyclic(){
+        
+    }
+    
+    //TODO
+    public void generateAcyclic(){
+        
+    }
+    
+    //TODO
+    public void generateTree(){
+        
+    }
+    
+    //TO ERASE
     //dummy method for parser testing
     public void generateFullDummy(){
         int nodeCount = 1000;   //set number of nodes as you wish
