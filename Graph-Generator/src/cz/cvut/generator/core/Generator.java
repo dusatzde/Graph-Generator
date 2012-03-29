@@ -69,6 +69,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     }
     
     public void generateSimple(){
+        int maxDensity = nodeCount/20; //maximal number of edges from one node
+        int noEdge = 0;
         ArrayList<Node> notUsed = new ArrayList<Node>(Arrays.asList(nodes));
         ArrayList<Node> connectedPart = new ArrayList<Node>();
         Node a = notUsed.remove(rand.nextInt(notUsed.size()));
@@ -78,13 +80,22 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         connectedPart.add(b);
         while(!notUsed.isEmpty()){
             a = notUsed.remove(rand.nextInt(notUsed.size()));
+            //connect a to rest of yet connected graph
             b = connectedPart.get(rand.nextInt(connectedPart.size()));
             //switching orientation
-            if(rand.nextInt() == 0) edgeList.add(new Edge(a, b));
+            if(rand.nextInt(2) == 0) edgeList.add(new Edge(a, b));
             else edgeList.add(new Edge(b, a));
-            connectedPart.add(a);            
+            connectedPart.add(a);
+            //add random number of edges coming from a
+            noEdge = rand.nextInt(maxDensity);
+            for(int i = 0; i < noEdge; i++){
+                b = nodes[rand.nextInt(nodeCount)];
+                edgeList.add(new Edge(a, b));
+                connectedPart.add(b);
+            }          
         }
     }
+    
     
     //dummy method for parser testing
     public void generateFullDummy(){
