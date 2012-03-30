@@ -28,7 +28,7 @@ public class GraphGenerator {
          * TOTO MUZETE SAMOZREJME SMAZAT
          */
         Generator g = new Generator();
-        g.setNodesCount(10);
+        g.setNodesCount(5);
         g.setMaxEdgeWeight(600);
         g.setMinEdgeWeight(6);
         ArrayList<GraphType> prop = new ArrayList<GraphType>();
@@ -38,6 +38,7 @@ public class GraphGenerator {
         g.initialize();
         g.generateSimple();
         Graph graf = g.getGraph();
+        //for(Edge e: graf.getEdges()) System.out.println(e);
         OutputParser op = new OutputParser(g, OutputType.INCIDENCE);
         op.generateOutput();
     }

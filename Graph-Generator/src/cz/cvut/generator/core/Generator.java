@@ -74,8 +74,10 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     }
     
     public void generateSimple(){
-        int maxDensity = nodeCount/20; //maximal number of edges from one node
+        int maxDensity = (int)Math.sqrt(nodeCount); //maximal number of edges from one node
+        //System.out.println("max density: " + maxDensity);
         int noEdge = 0;
+        Edge e;
         ArrayList<Node> notUsed = new ArrayList<Node>(Arrays.asList(nodes));
         ArrayList<Node> connectedPart = new ArrayList<Node>();
         Node a = notUsed.remove(rand.nextInt(notUsed.size()));
@@ -88,14 +90,18 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
             //connect a to rest of yet connected graph
             b = connectedPart.get(rand.nextInt(connectedPart.size()));
             //switching orientation
-            if(rand.nextInt(2) == 0) edgeList.add(new Edge(a, b));
-            else edgeList.add(new Edge(b, a));
-            connectedPart.add(a);
+            if(rand.nextInt(2) == 0) e = new Edge(a, b);
+            else e = new Edge(b, a);
+            //multiplicity check
+            if(!edgeList.contains(e) && a != b){
+                edgeList.add(e);
+                connectedPart.add(a);               
+            }
             //add random number of edges coming from a
             noEdge = rand.nextInt(maxDensity);
             for(int i = 0; i < noEdge; i++){
                 b = nodes[rand.nextInt(nodeCount)];
-                edgeList.add(new Edge(a, b));
+                if(a != b)edgeList.add(new Edge(a, b));
                 connectedPart.add(b);
             }          
         }
