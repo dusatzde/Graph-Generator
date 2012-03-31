@@ -30,6 +30,23 @@ public class Edge {
         return "from: " + from.getId() + " to: " + to.getId() + " weight: " + weight;
     }
     
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof Edge)) return false;
+        Edge h = (Edge)o;
+        if(this.from == h.from && this.to == h.to && this.weight == h.weight) return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + (this.from != null ? this.from.hashCode() : 0);
+        hash = 53 * hash + (this.to != null ? this.to.hashCode() : 0);
+        hash = 53 * hash + (int) (Double.doubleToLongBits(this.weight) ^ (Double.doubleToLongBits(this.weight) >>> 32));
+        return hash;
+    }
+    
     public Node getNodeFrom(){
         return this.from;
     }

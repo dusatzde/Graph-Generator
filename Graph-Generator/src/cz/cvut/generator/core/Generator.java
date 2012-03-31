@@ -110,7 +110,41 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     
     //TODO
     public void generateBipartite(){
-        
+        int maxEdgeCountPart1;
+        int maxEdgeCountPart2;
+        int edgeCount;
+        Node a;
+        Edge e;
+        ArrayList<Node> part1 = new ArrayList(Arrays.asList(nodes));
+        ArrayList<Node> part2 = new ArrayList<Node>();
+        int minPartSize = (int) Math.sqrt(nodeCount);
+        int part2size = rand.nextInt(nodeCount  - minPartSize) + minPartSize;
+        //minimal part1 size ensuring
+        while(part2size > nodeCount - minPartSize) part2size = rand.nextInt(nodeCount  - minPartSize) + minPartSize;
+        //choose nodes for part2
+        for(int i = 0; i < part2size; i++){
+            part2.add(part1.remove(rand.nextInt(part1.size())));
+        }
+        maxEdgeCountPart1 = part2.size();
+        maxEdgeCountPart2 = part1.size();
+        //generate edges coming from part1 nodes
+        for(Node n: part1){
+            edgeCount = rand.nextInt(maxEdgeCountPart1);
+            for(int i = 0; i < edgeCount; i++){
+                a = part2.get(rand.nextInt(part2.size()));
+                e = new Edge(n, a);
+                if(!edgeList.contains(e)) edgeList.add(e);
+            }
+        }
+        //generate edges coming from part2 nodes
+        for(Node n: part2){
+            edgeCount = rand.nextInt(maxEdgeCountPart2);
+            for(int i = 0; i < edgeCount; i++){
+                a = part1.get(rand.nextInt(part1.size()));
+                e = new Edge(n, a);
+                if(!edgeList.contains(e)) edgeList.add(e);
+            }
+        }
     }
     
     //TODO
