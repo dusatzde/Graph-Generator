@@ -44,7 +44,7 @@ public class GraphGenerator {
 //         * TOTO MUZETE SAMOZREJME SMAZAT
 //         */
 //        Generator g = new Generator();
-//        g.setNodesCount(200000);
+//        g.setNodesCount(10);
 //        g.setMaxEdgeWeight(600);
 //        g.setMinEdgeWeight(6);
 //        ArrayList<GraphType> prop = new ArrayList<GraphType>();
@@ -52,10 +52,10 @@ public class GraphGenerator {
 //        prop.add(GraphType.DIRECTED);
 //        g.setProperties(prop);
 //        g.initialize();
-//        g.generateBipartite();
+//        g.generateCyclic();
 //        Graph graf = g.getGraph();
-//        //for(Edge e: graf.getEdges()) System.out.println(e);
-//        //OutputParser op = new OutputParser(g, OutputType.INCIDENCE);
-//        //op.generateOutput();
+//        for(Edge e: graf.getEdges()) System.out.println(e);
+        //OutputParser op = new OutputParser(g, OutputType.INCIDENCE);
+        //op.generateOutput();
     }
 }

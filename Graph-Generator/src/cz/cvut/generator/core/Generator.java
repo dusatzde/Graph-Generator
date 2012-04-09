@@ -160,6 +160,67 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     
     //TODO
     public void generateCyclic(){
+        int cycleSize;
+        Node startNode, tmp1, tmp2;
+        Edge e;
+        int minCycleCount = (int) Math.sqrt(nodeCount)/2 + 1;
+        int cycleCount = rand.nextInt((int) Math.sqrt(nodeCount) - minCycleCount) + minCycleCount;
+        ArrayList[] cycles = new ArrayList[cycleCount];
+        boolean[] usedNodes = new boolean[nodeCount];
+        
+        for(int i = 0; i < nodeCount; i++){
+            usedNodes[i] = false;
+        }
+        
+        //cycles generation
+        for(int i = 0; i < cycleCount; i++){
+            cycles[i] = new ArrayList<Node>();
+            cycleSize = rand.nextInt(nodeCount - (int) Math.sqrt(nodeCount)/2) + (int) Math.sqrt(nodeCount)/2;
+            startNode = nodes[rand.nextInt(nodeCount)];
+            tmp1 = nodes[rand.nextInt(nodeCount)];
+            //we need two different nodes
+            while(tmp1 == startNode) tmp1 = nodes[rand.nextInt(nodeCount)];
+            //first edge of cycle
+            e = new Edge(startNode, tmp1);
+            edgeList.add(e);
+            cycles[i].add(startNode);
+            cycles[i].add(tmp1);
+            usedNodes[(int)startNode.getId()] = true;
+            usedNodes[(int)tmp1.getId()] = true;
+            //rest edges od cycle
+            for(int j = 0; j < cycleSize; j++){
+                tmp2 = nodes[rand.nextInt(nodeCount)];
+                //node is not yet in this cycle
+                if(!cycles[i].contains(tmp2)){
+                    e = new Edge(tmp1, tmp2);
+                    edgeList.add(e);
+                    cycles[i].add(tmp2);
+                    usedNodes[(int)tmp2.getId()] = true;
+                    tmp1 = tmp2;
+                }
+                else j--;
+            }
+            //close the cycle
+            e = new Edge(tmp1, startNode);
+            edgeList.add(e);
+        }
+        //assurment of graph connection
+        for(int i = 0; i < cycleCount - 1; i = i+2){
+            tmp1 = (Node) cycles[i].get(rand.nextInt(cycles[i].size()));
+            tmp2 = (Node) cycles[i+1].get(rand.nextInt(cycles[i+1].size()));
+            e = new Edge(tmp1, tmp2);
+            if(!edgeList.contains(e)) edgeList.add(e);
+        }
+        //connect not yet used nodes
+        for(int i = 0; i < nodeCount; i++){
+            if(!usedNodes[i]){
+                int cycleNo = rand.nextInt(cycleCount);
+                tmp1 = (Node) cycles[cycleNo].get(rand.nextInt(cycles[cycleNo].size()));
+                if(i%2 == 0) e = new Edge(nodes[i], tmp1);
+                else e = new Edge(tmp1, nodes[i]);
+                edgeList.add(e);
+            }
+        }
         
     }
     
