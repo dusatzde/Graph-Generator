@@ -45,10 +45,14 @@ public class MainWindow extends JFrame{
             GraphicsPanel logoPanel = new GraphicsPanel();
             LogPanel logPanel = new LogPanel();
             MainMenuBar menuBar = new MainMenuBar();
+            OutputPanel outputPanel = new OutputPanel();
+            ConfigPanel configPanel = new ConfigPanel();
             
             setJMenuBar(menuBar);
             add(logoPanel, BorderLayout.NORTH);
             add(logPanel, BorderLayout.SOUTH);
+            add(outputPanel, BorderLayout.EAST);
+            //add(configPanel, BorderLayout.WEST);
     }
     
     private void setIcon(String path){

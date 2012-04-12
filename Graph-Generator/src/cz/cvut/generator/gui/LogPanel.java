@@ -36,7 +36,7 @@ public class LogPanel extends JTabbedPane{
         ta = new JTextArea();
         ta.setText("Welcome. Choose type and size of your graph...");
         ta.setLineWrap(true);
-       // ta.setEditable(false);
+        ta.setEditable(false);
         Font f = Font.decode("Monospaced");
         if (f != null) {
             ta.setFont(f);
