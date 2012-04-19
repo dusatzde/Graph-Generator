@@ -52,7 +52,7 @@ public class MainWindow extends JFrame{
             add(logoPanel, BorderLayout.NORTH);
             add(logPanel, BorderLayout.SOUTH);
             add(outputPanel, BorderLayout.EAST);
-            //add(configPanel, BorderLayout.WEST);
+            add(configPanel, BorderLayout.WEST);
     }
     
     private void setIcon(String path){
