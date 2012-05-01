@@ -27,6 +27,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     private boolean directed;
     private boolean weighted;
     private Random rand;
+    private GraphType graphType;
     
     
     public Generator(){
@@ -41,11 +42,30 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         edgeList = new ArrayList<Edge>();
         if(properties.contains(GraphType.DIRECTED))directed = true;
         if(properties.contains(GraphType.WEIGHTED))weighted = true;
+        graphType = properties.get(0);
     }
     
     //TODO
     public void generate(){
-        
+        switch(graphType){
+            case COMPLETE:
+                generateComplete();
+                break;
+            case SIMPLE:
+                generateSimple();
+                break;
+            case BIPARTITE:
+                generateBipartite();
+                break;
+            case CYCLIC:
+                generateCyclic();
+                break;
+            case TREE:
+                generateTree();
+                break;
+            default:
+                break;               
+        }
     }
     
     private void generateNodes(){
