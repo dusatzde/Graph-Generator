@@ -15,5 +15,6 @@ public interface GraphConfigI{
     public void setNodes(List<Node> nodes);
     public void setEdges(List<Edge> edges);
     public void setDirected(boolean directed);
+    public void setWeighted(boolean weighted);
     
 }

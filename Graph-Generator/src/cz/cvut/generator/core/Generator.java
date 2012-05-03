@@ -285,7 +285,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         }        
         g.setEdges(edgeList);
         g.setNodes(nodeList);
-        g.setDirected(directed);
+        g.setDirected(directed);            
+        g.setWeighted(weighted);        
     }
 
     @Override

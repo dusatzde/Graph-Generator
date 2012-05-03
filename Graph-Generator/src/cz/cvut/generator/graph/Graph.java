@@ -14,6 +14,7 @@ import java.util.List;
 public class Graph implements GraphConfigI {
 
     private boolean directed;
+    private boolean weighted;
     private List<Edge> edges;
     private List<Node> nodes;
 
@@ -42,6 +43,11 @@ public class Graph implements GraphConfigI {
 
     public List<Edge> getEdges() {
         return this.edges;
+    }
+
+    @Override
+    public void setWeighted(boolean weighted) {
+        this.weighted = weighted;
     }
 
 
