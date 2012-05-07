@@ -54,12 +54,12 @@ public class GraphGenerator {
         prop.add(GraphType.DIRECTED);
         g.setProperties(prop);
         g.initialize();
-        g.generateCyclic();
+        g.generateTree();
         Graph graf = g.getGraph();
         for (Edge e : graf.getEdges()) {
             System.out.println(e);
         }
-        OutputParser op = new OutputParser(g, OutputType.XML);
+        OutputParser op = new OutputParser(g, OutputType.DOT);
         op.generateOutput();
     }
 }

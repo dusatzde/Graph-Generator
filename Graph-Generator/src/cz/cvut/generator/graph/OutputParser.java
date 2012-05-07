@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package cz.cvut.generator.graph;
+
 import cz.cvut.generator.core.Generator;
 import cz.cvut.generator.core.GeneratorOutputI;
 import java.io.*;
@@ -180,21 +181,21 @@ public class OutputParser {
         List<Node> nodes = graph.getNodes();
         Iterator<Edge> it = edges.iterator();
         Iterator<Node> itn = nodes.iterator();
-        while (itn.hasNext()) {
-            Node n = itn.next();
-            out.println(n.getId());
-        }
 
         if (graph.isDirected()) {
             out.println("digraph graphname{");
+            while (itn.hasNext()) {
+                Node n = itn.next();
+                out.println(n.getId());
+            }
             if (graph.isWeighted()) {
-                System.out.println("Start of generating output file - DOT (directed, weighted");
+                System.out.println("Start of generating output file - DOT (directed, weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
                     out.println(e.getNodeFrom().getId() + " -> " + e.getNodeTo().getId() + "[label=" + e.getWeight() + "]");
                 }
             } else {
-                System.out.println("Start of generating output file - DOT (directed, not weighted");
+                System.out.println("Start of generating output file - DOT (directed, not weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
                     out.println(e.getNodeFrom().getId() + " -> " + e.getNodeTo().getId());
@@ -202,14 +203,18 @@ public class OutputParser {
             }
         } else {
             out.println("graph graphname{");
+            while (itn.hasNext()) {
+                Node n = itn.next();
+                out.println(n.getId());
+            }
             if (graph.isWeighted()) {
-                System.out.println("Start of generating output file - DOT (not directed, weighted");
+                System.out.println("Start of generating output file - DOT (not directed, weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
                     out.println(e.getNodeFrom().getId() + " -- " + e.getNodeTo().getId() + "[label=" + e.getWeight() + "]");
                 }
             } else {
-                System.out.println("Start of generating output file - DOT (not directed, not weighted");
+                System.out.println("Start of generating output file - DOT (not directed, not weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
                     out.println(e.getNodeFrom().getId() + " -- " + e.getNodeTo().getId());
