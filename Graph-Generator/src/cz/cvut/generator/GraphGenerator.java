@@ -28,34 +28,38 @@ public class GraphGenerator {
      */
     public static void main(String[] args) throws FileNotFoundException {
 
-        /* UI Thead*/
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                MainWindow m = new MainWindow();
-                m.setVisible(true);
-            }
-        });
-
-
+        /*
+         * UI Thead
+         */
+//        SwingUtilities.invokeLater(new Runnable() {
 //
-//        /*
-//         * TOTO MUZETE SAMOZREJME SMAZAT
-//         */
-//        Generator g = new Generator();
-//        g.setNodesCount(10);
-//        g.setMaxEdgeWeight(600);
-//        g.setMinEdgeWeight(6);
-//        ArrayList<GraphType> prop = new ArrayList<GraphType>();
-//        prop.add(GraphType.WEIGHTED);
-//        prop.add(GraphType.DIRECTED);
-//        g.setProperties(prop);
-//        g.initialize();
-//        g.generateCyclic();
-//        Graph graf = g.getGraph();
-//        for(Edge e: graf.getEdges()) System.out.println(e);
-        //OutputParser op = new OutputParser(g, OutputType.INCIDENCE);
-        //op.generateOutput();
+//            @Override
+//            public void run() {
+//                MainWindow m = new MainWindow();
+//                m.setVisible(true);
+//            }
+//        });
+
+
+
+        /*
+         * TOTO MUZETE SAMOZREJME SMAZAT
+         */
+        Generator g = new Generator();
+        g.setNodesCount(10);
+        g.setMaxEdgeWeight(600);
+        g.setMinEdgeWeight(6);
+        ArrayList<GraphType> prop = new ArrayList<GraphType>();
+ //       prop.add(GraphType.WEIGHTED);
+        prop.add(GraphType.DIRECTED);
+        g.setProperties(prop);
+        g.initialize();
+        g.generateCyclic();
+        Graph graf = g.getGraph();
+        for (Edge e : graf.getEdges()) {
+            System.out.println(e);
+        }
+        OutputParser op = new OutputParser(g, OutputType.DOT);
+        op.generateOutput();
     }
 }

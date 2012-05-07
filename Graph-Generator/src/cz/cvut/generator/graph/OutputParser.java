@@ -15,16 +15,20 @@ import java.util.List;
  * @author Lenovo
  */
 public class OutputParser {
-    
+
+    Graph graph;
     Generator gen;
     OutputType ot;
-    
+
     public OutputParser(Generator gen, OutputType ot) {
         this.gen = gen;
         this.ot = ot;
+        this.graph = gen.getGraph();
+        System.out.println("Generator ");
     }
-    
+
     public void generateOutput() throws FileNotFoundException {
+        System.out.println(ot);
         switch (ot) {
             case TRIVIAL:
                 generateTrivialOutput();
@@ -36,26 +40,26 @@ public class OutputParser {
                 GenerateIncidenceOutput();
                 break;
             case DOT:
-                
+                GenerateDOT();
                 break;
-            
+
             default:
                 System.out.println("Incorrect output type");
         }
     }
-    
+
     private void generateTrivialOutput() throws FileNotFoundException {
         System.out.println("Start of generating output file - Trivial Graph");
         PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
         Graph g = this.gen.getGraph();
         List<Node> nodes = g.getNodes();
         List<Edge> edges = g.getEdges();
-        
+
         Iterator<Node> nodeIt = nodes.iterator();
         while (nodeIt.hasNext()) {
             out.println(nodeIt.next().getLabel());
         }
-        
+
         Iterator<Edge> edgeIt = edges.iterator();
         while (edgeIt.hasNext()) {
             Edge e = edgeIt.next();
@@ -63,42 +67,34 @@ public class OutputParser {
         }
         out.close();
     }
-    
+
     private void generateAdjacencyOutput() throws FileNotFoundException {
         System.out.println("Start of generating output file - Adjacency matrix");
         PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
-        
+
         Graph g = this.gen.getGraph();
         List<GraphType> properties = gen.getProperties();
         List<Node> nodes = g.getNodes();
         List<Edge> edges = g.getEdges();
         boolean weighted = false;
         boolean directed = false;
-        
+
         double[][] adjacencyMatrix = new double[nodes.size()][nodes.size()];
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < nodes.size(); j++) {
                 adjacencyMatrix[i][j] = Double.MAX_VALUE;
             }
         }
-        
-        Iterator<GraphType> it = properties.iterator();
-        while (it.hasNext()) {
-            GraphType gType = it.next();
-            if (gType == GraphType.DIRECTED) {
-                directed = true;
-            }
-            if (gType == GraphType.WEIGHTED) {
-                weighted = true;
-            }
-        }
-        
-        
+
+        directed = graph.isDirected();
+        weighted = graph.isWeighted();
+
+
         Iterator<Edge> edgeIt = edges.iterator();
         Edge e;
         int from, to;
-        
-        
+
+
         while (edgeIt.hasNext()) {
             e = edgeIt.next();
             from = nodes.lastIndexOf(e.getNodeFrom());
@@ -121,7 +117,7 @@ public class OutputParser {
                 }
             }
         }
-        
+
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < nodes.size(); j++) {
                 if (adjacencyMatrix[i][j] != Double.MAX_VALUE) {
@@ -136,44 +132,85 @@ public class OutputParser {
             }
             out.println("");
         }
-        
-        
+
+
         out.close();
     }
-    
-    private void GenerateIncidenceOutput() throws FileNotFoundException{
+
+    private void GenerateIncidenceOutput() throws FileNotFoundException {
         System.out.println("Start of generating output file - Incidence matrix Graph");
         PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
-        
+
         Graph g = this.gen.getGraph();
         List<Node> nodes = g.getNodes();
         List<Edge> edges = g.getEdges();
         Iterator<Edge> it = edges.iterator();
-        double [][] incidenceMatrix = new double[nodes.size()][edges.size()];
-        
-        for(int i = 0; i < nodes.size(); i++){
-            for(int j = 0; j < edges.size(); j++){
+        double[][] incidenceMatrix = new double[nodes.size()][edges.size()];
+
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = 0; j < edges.size(); j++) {
                 incidenceMatrix[i][j] = 0;
             }
         }
-        
-        
+
+
         int j = 0;
         Edge e;
-        while(it.hasNext()){
+        while (it.hasNext()) {
             e = it.next();
             incidenceMatrix[nodes.lastIndexOf(e.getNodeFrom())][j] = 1;
             incidenceMatrix[nodes.lastIndexOf(e.getNodeTo())][j] = 1;
             j++;
         }
-        
-        for(int i = 0; i < nodes.size(); i++){
-            for(j = 0; j < edges.size(); j++){
-                out.print((int)incidenceMatrix[i][j] + " ");
+
+        for (int i = 0; i < nodes.size(); i++) {
+            for (j = 0; j < edges.size(); j++) {
+                out.print((int) incidenceMatrix[i][j] + " ");
             }
             out.println();
         }
         out.close();
-        
+
+    }
+
+    private void GenerateDOT() throws FileNotFoundException {
+        PrintWriter out = new PrintWriter(new FileOutputStream("output.dot"));
+        List<Edge> edges = graph.getEdges();
+        Iterator<Edge> it = edges.iterator();
+        if (graph.isDirected()) {
+            out.println("digraph graphname{");
+            if (graph.isWeighted()) {
+                System.out.println("Start of generating output file - DOT (directed, weighted");
+                while (it.hasNext()) {
+                    Edge e = it.next();
+                    out.println(e.getNodeFrom().getId() + " -> " + e.getNodeTo().getId() + "[label=" + e.getWeight() + "]");
+                }
+            } else {
+                System.out.println("Start of generating output file - DOT (directed, not weighted");
+                while (it.hasNext()) {
+                    Edge e = it.next();
+                    out.println(e.getNodeFrom().getId() + " -> " + e.getNodeTo().getId());
+                }
+            }
+        } else {
+            out.println("graph graphname{");
+            if (graph.isWeighted()) {
+                System.out.println("Start of generating output file - DOT (not directed, weighted");
+                while (it.hasNext()) {
+                    Edge e = it.next();
+                    out.println(e.getNodeFrom().getId() + " -- " + e.getNodeTo().getId() + "[label=" + e.getWeight() + "]");
+                }
+            } else {
+                System.out.println("Start of generating output file - DOT (not directed, not weighted");
+                while (it.hasNext()) {
+                    Edge e = it.next();
+                    out.println(e.getNodeFrom().getId() + " -- " + e.getNodeTo().getId());
+                }
+            }
+
+        }
+
+        out.println("}");
+        out.close();
     }
 }

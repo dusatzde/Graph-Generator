@@ -21,6 +21,10 @@ public class Graph implements GraphConfigI {
     public boolean isDirected() {
         return directed;
     }
+    
+    public boolean isWeighted(){
+        return weighted;
+    }
 
     @Override
     public void setDirected(boolean directed) {
