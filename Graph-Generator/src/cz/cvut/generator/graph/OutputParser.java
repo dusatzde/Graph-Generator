@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 package cz.cvut.generator.graph;
-
 import cz.cvut.generator.core.Generator;
 import cz.cvut.generator.core.GeneratorOutputI;
 import java.io.*;
@@ -37,12 +36,14 @@ public class OutputParser {
                 generateAdjacencyOutput();
                 break;
             case INCIDENCE:
-                GenerateIncidenceOutput();
+                generateIncidenceOutput();
                 break;
             case DOT:
-                GenerateDOT();
+                generateDOT();
                 break;
-
+            case XML:
+                generateXML();
+                break;
             default:
                 System.out.println("Incorrect output type");
         }
@@ -137,7 +138,7 @@ public class OutputParser {
         out.close();
     }
 
-    private void GenerateIncidenceOutput() throws FileNotFoundException {
+    private void generateIncidenceOutput() throws FileNotFoundException {
         System.out.println("Start of generating output file - Incidence matrix Graph");
         PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
 
@@ -173,10 +174,17 @@ public class OutputParser {
 
     }
 
-    private void GenerateDOT() throws FileNotFoundException {
+    private void generateDOT() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(new FileOutputStream("output.dot"));
         List<Edge> edges = graph.getEdges();
+        List<Node> nodes = graph.getNodes();
         Iterator<Edge> it = edges.iterator();
+        Iterator<Node> itn = nodes.iterator();
+        while (itn.hasNext()) {
+            Node n = itn.next();
+            out.println(n.getId());
+        }
+
         if (graph.isDirected()) {
             out.println("digraph graphname{");
             if (graph.isWeighted()) {
@@ -210,7 +218,60 @@ public class OutputParser {
 
         }
 
-        out.println("}");
+        out.println(
+                "}");
         out.close();
+    }
+
+    private void generateXML() throws FileNotFoundException {
+        PrintWriter out = new PrintWriter(new FileOutputStream("output.xml"));
+        List<Edge> edges = graph.getEdges();
+        List<Node> nodes = graph.getNodes();
+
+        out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        out.print("<graph weighted=\"");
+        if (graph.isWeighted()) {
+            out.print("true");
+        } else {
+            out.print("false");
+        }
+        out.print("\" directed=\"");
+
+        if (graph.isDirected()) {
+            out.println("true\">");
+        } else {
+            out.println("false\">");
+        }
+
+        Iterator<Node> itn = nodes.iterator();
+        out.println("   <nodes>");
+
+        while (itn.hasNext()) {
+            Node n = itn.next();
+            out.println("      <node>");
+            out.println("         <name> " + n.getId() + " </name>");
+            out.println("      </node>");
+        }
+        out.println("   </nodes>");
+
+        Iterator<Edge> ite = edges.iterator();
+
+        out.println("   <edges>");
+        while (ite.hasNext()) {
+            Edge e = ite.next();
+            out.println("      <edge>");
+            out.println("         <nodeFrom>" + e.getNodeFrom().getId() + "</nodeFrom>");
+            out.println("         <nodeTo>" + e.getNodeTo().getId() + "</nodeTo>");
+            if (graph.isWeighted()) {
+                out.println("         <weight>" + e.getWeight() + "</weight>");
+            }
+            out.println("      </edge>");
+        }
+
+        out.println("   </edges>");
+        out.println("</graph>");
+        out.close();
+
+
     }
 }

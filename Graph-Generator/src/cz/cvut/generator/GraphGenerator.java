@@ -59,7 +59,7 @@ public class GraphGenerator {
         for (Edge e : graf.getEdges()) {
             System.out.println(e);
         }
-        OutputParser op = new OutputParser(g, OutputType.DOT);
+        OutputParser op = new OutputParser(g, OutputType.XML);
         op.generateOutput();
     }
 }
