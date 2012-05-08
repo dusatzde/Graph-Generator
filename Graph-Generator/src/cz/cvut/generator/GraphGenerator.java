@@ -46,20 +46,21 @@ public class GraphGenerator {
          * TOTO MUZETE SAMOZREJME SMAZAT
          */
         Generator g = new Generator();
-        g.setNodesCount(10);
+        g.setNodesCount(1000);
         g.setMaxEdgeWeight(600);
         g.setMinEdgeWeight(6);
         ArrayList<GraphType> prop = new ArrayList<GraphType>();
-        //prop.add(GraphType.SIMPLE);
-        //prop.add(GraphType.WEIGHTED);
-        //prop.add(GraphType.DIRECTED);
+        prop.add(GraphType.COMPLETE);
+        prop.add(GraphType.WEIGHTED);
+        prop.add(GraphType.DIRECTED);
         g.setProperties(prop);
-        g.initialize();
+        //g.initialize();
         g.generate();
-        Graph graf = g.getGraph();
-        for (Edge e : graf.getEdges()) {
-            System.out.println(e);
-        }
+        System.out.println("KONEC GEN");
+//        Graph graf = g.getGraph();
+//        for (Edge e : graf.getEdges()) {
+//            System.out.println(e);
+//        }
         //OutputParser op = new OutputParser(g, OutputType.DOT);
         //op.generateOutput();
     }

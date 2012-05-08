@@ -45,6 +45,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     
     //TODO
     public void generate(){
+        initialize();
         switch(graphType){
             case COMPLETE:
                 generateComplete();
@@ -60,6 +61,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
                 break;
             case TREE:
                 generateTree();
+                break;
+            case DISCRETE:
                 break;
             default:
                 break;               
