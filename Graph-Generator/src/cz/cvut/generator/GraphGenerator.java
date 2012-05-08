@@ -28,34 +28,46 @@ public class GraphGenerator {
      */
     public static void main(String[] args) throws FileNotFoundException {
 
-        /* UI Thead*/
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                MainWindow m = new MainWindow();
-                m.setVisible(true);
-            }
-        });
-
-
+        /*
+         * UI Thead
+         */
+//        SwingUtilities.invokeLater(new Runnable() {
 //
-//        /*
-//         * TOTO MUZETE SAMOZREJME SMAZAT
-//         */
-//        Generator g = new Generator();
-//        g.setNodesCount(10);
-//        g.setMaxEdgeWeight(600);
-//        g.setMinEdgeWeight(6);
-//        ArrayList<GraphType> prop = new ArrayList<GraphType>();
-//        prop.add(GraphType.WEIGHTED);
-//        prop.add(GraphType.DIRECTED);
-//        g.setProperties(prop);
-//        g.initialize();
-//        g.generateCyclic();
+//            @Override
+//            public void run() {
+//                MainWindow m = new MainWindow();
+//                m.setVisible(true);
+//            }
+//        });
+
+
+
+        /*
+         * TOTO MUZETE SAMOZREJME SMAZAT
+         */
+        Generator g = new Generator();
+        g.setNodesCount(1000);
+        g.setMaxEdgeWeight(600);
+        g.setMinEdgeWeight(6);
+        ArrayList<GraphType> prop = new ArrayList<GraphType>();
+        prop.add(GraphType.COMPLETE);
+        prop.add(GraphType.WEIGHTED);
+        prop.add(GraphType.DIRECTED);
+        g.setProperties(prop);
+        //g.initialize();
+        g.generate();
+        System.out.println("KONEC GEN");
 //        Graph graf = g.getGraph();
+<<<<<<< HEAD
 //        for(Edge e: graf.getEdges()) System.out.println(e);
 //        OutputParser op = new OutputParser(g, OutputType.INCIDENCE);
 //        op.generateOutput();
+=======
+//        for (Edge e : graf.getEdges()) {
+//            System.out.println(e);
+//        }
+        //OutputParser op = new OutputParser(g, OutputType.DOT);
+        //op.generateOutput();
+>>>>>>> 93c0a607aa3bfb9542a6bf5fb7bb6427217b533a
     }
 }

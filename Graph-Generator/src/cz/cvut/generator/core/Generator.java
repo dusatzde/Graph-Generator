@@ -5,10 +5,7 @@
 package cz.cvut.generator.core;
 
 import cz.cvut.generator.graph.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  *
@@ -27,6 +24,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     private boolean directed;
     private boolean weighted;
     private Random rand;
+    private GraphType graphType;
     
     
     public Generator(){
@@ -41,11 +39,34 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         edgeList = new ArrayList<Edge>();
         if(properties.contains(GraphType.DIRECTED))directed = true;
         if(properties.contains(GraphType.WEIGHTED))weighted = true;
+        if(properties.isEmpty()) graphType = GraphType.SIMPLE;
+        else graphType = properties.get(0);
     }
     
     //TODO
     public void generate(){
-        
+        initialize();
+        switch(graphType){
+            case COMPLETE:
+                generateComplete();
+                break;
+            case SIMPLE:
+                generateSimple();
+                break;
+            case BIPARTITE:
+                generateBipartite();
+                break;
+            case CYCLIC:
+                generateCyclic();
+                break;
+            case TREE:
+                generateTree();
+                break;
+            case DISCRETE:
+                break;
+            default:
+                break;               
+        }
     }
     
     private void generateNodes(){
@@ -231,6 +252,37 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     
     //TODO
     public void generateTree(){
+        generateCyclic();
+        
+        Iterator<Edge> ite = edgeList.iterator();
+        ArrayList<Edge> le = new ArrayList <Edge>();
+        
+        int cnt = 0;
+        int [] cycles = new int[nodeCount];
+        for(int i = 0; i < nodeCount; i++){
+            cycles[i] = i;
+        }
+        while(cnt < nodeCount-1 && ite.hasNext()){
+            Edge e = ite.next();
+            if(cycles[(int)e.getNodeFrom().getId()] != cycles[(int)e.getNodeTo().getId()]){
+                int from = cycles[(int)e.getNodeFrom().getId()];
+                int to = cycles[(int)e.getNodeTo().getId()];
+                for(int i = 0; i < nodeCount; i++){
+                    if(cycles[i] == from){
+                        cycles[i] = to;
+                    }
+                }
+                cnt++;
+                le.add(e);
+            }
+        }
+        edgeList = le;
+        Iterator <Edge> ite2 = le.iterator();
+        while(ite2.hasNext()){
+            System.out.println(ite2.next().getWeight());
+        }
+        
+        
         
     }
     
@@ -265,7 +317,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         }        
         g.setEdges(edgeList);
         g.setNodes(nodeList);
-        g.setDirected(directed);
+        g.setDirected(directed);            
+        g.setWeighted(weighted);        
     }
 
     @Override
