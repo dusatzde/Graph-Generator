@@ -39,7 +39,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         edgeList = new ArrayList<Edge>();
         if(properties.contains(GraphType.DIRECTED))directed = true;
         if(properties.contains(GraphType.WEIGHTED))weighted = true;
-        graphType = properties.get(0);
+        if(properties.isEmpty()) graphType = GraphType.SIMPLE;
+        else graphType = properties.get(0);
     }
     
     //TODO

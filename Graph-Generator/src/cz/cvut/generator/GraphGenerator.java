@@ -50,16 +50,17 @@ public class GraphGenerator {
         g.setMaxEdgeWeight(600);
         g.setMinEdgeWeight(6);
         ArrayList<GraphType> prop = new ArrayList<GraphType>();
- //       prop.add(GraphType.WEIGHTED);
-        prop.add(GraphType.DIRECTED);
+        //prop.add(GraphType.SIMPLE);
+        //prop.add(GraphType.WEIGHTED);
+        //prop.add(GraphType.DIRECTED);
         g.setProperties(prop);
         g.initialize();
-        g.generateTree();
+        g.generate();
         Graph graf = g.getGraph();
         for (Edge e : graf.getEdges()) {
             System.out.println(e);
         }
-        OutputParser op = new OutputParser(g, OutputType.DOT);
-        op.generateOutput();
+        //OutputParser op = new OutputParser(g, OutputType.DOT);
+        //op.generateOutput();
     }
 }
