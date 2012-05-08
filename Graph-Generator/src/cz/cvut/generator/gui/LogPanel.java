@@ -4,6 +4,7 @@
  */
 package cz.cvut.generator.gui;
 
+import cz.cvut.generator.gui.util.Components;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,6 +35,8 @@ public class LogPanel extends JTabbedPane{
     
     private void init(){
         ta = new JTextArea();
+        ta.setName("LogTextArea");
+        Components.component.put(ta.getName(), ta);
         ta.setText("Welcome. Choose type and size of your graph...");
         ta.setLineWrap(true);
         ta.setEditable(false);

@@ -4,6 +4,8 @@
  */
 package cz.cvut.generator.gui;
 
+import cz.cvut.generator.gui.listeners.GenerateActionListener;
+import cz.cvut.generator.gui.util.Components;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,10 +18,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SpringLayout;
 import javax.swing.border.Border;
 
 /**
@@ -27,7 +27,7 @@ import javax.swing.border.Border;
  * @author ZDENEK
  */
 public class OutputPanel extends JPanel implements ActionListener{
-    private String[] formats = {"Trivial Graph Format", "DOT", "XML", "Incidence Matrix", "Adjacency matrix"};
+    private String[] formats = {"Trivial Graph Format", "DOT", "Incidence Matrix", "Adjacency matrix"};
     private JLabel file_format_label = new JLabel("Select output format:");
     private JComboBox  file_format = new JComboBox(formats);
     private JLabel file_name_label = new JLabel("File name:");
@@ -35,8 +35,11 @@ public class OutputPanel extends JPanel implements ActionListener{
     private JLabel file_path_label = new JLabel("Path:");
     private JTextField dir = new JTextField();
     private JButton browseButton = new JButton("Browse");
+    private JButton stopButton = new JButton("Stop");
     private JButton generateButton = new JButton("Generate");  
     private Border border;
+    private JLabel file_path_err_msg = new JLabel("<html><span style='color: red;'>File name and path required!</span></html>");
+   
     
     public OutputPanel(){
         border = BorderFactory.createTitledBorder("Output Configuration");
@@ -45,6 +48,13 @@ public class OutputPanel extends JPanel implements ActionListener{
         this.setLayout(formLayout);
         componentsInit();
         componentsLayoutInit();
+         Components.component.put("fileFormat", file_format);
+         Components.component.put("fileName", file_name);
+         Components.component.put("dir", dir);
+         Components.component.put("generateButton", generateButton);
+         Components.component.put("stopButton", stopButton);
+         Components.component.put("filePathErrMsg", file_path_err_msg);
+         Components.component.put("fileFormat", file_format);
     }
     
     private void componentsLayoutInit(){
@@ -70,6 +80,12 @@ public class OutputPanel extends JPanel implements ActionListener{
         gbc.gridx = 1;
         gbc.gridy= 2;
         this.add(dir, gbc);
+        
+        gbc.gridx = 1;
+        gbc.gridy= 3;
+        file_path_err_msg.setVisible(false);
+        this.add(file_path_err_msg, gbc);
+        
         gbc.gridx = 2;
         gbc.gridy= 2;
         this.add(browseButton, gbc);
@@ -77,12 +93,23 @@ public class OutputPanel extends JPanel implements ActionListener{
         gbc.gridy= 5;
         gbc.insets = new Insets(180, 10, 3, 5);
         this.add(generateButton, gbc);
+        
+        gbc.gridx = 1;
+        gbc.gridy= 5;
+        gbc.insets = new Insets(180, 10, 3, 5);
+        stopButton.setVisible(false);
+        this.add(stopButton, gbc);
     }
     
     private void componentsInit(){
-        
+        GenerateActionListener generateListener = new GenerateActionListener();
         browseButton.setActionCommand("browse");
         browseButton.addActionListener(this);
+        
+        generateButton.setActionCommand("generate");
+        generateButton.addActionListener(generateListener);
+        
+        
         file_name.setEditable(false);
       
     }
@@ -92,12 +119,14 @@ public class OutputPanel extends JPanel implements ActionListener{
         String cmd = e.getActionCommand();
         if (cmd.equals("browse")) {
             JFileChooser c = new JFileChooser();
+            ((JLabel)Components.component.get("filePathErrMsg")).setVisible(false);
             int rVal = c.showSaveDialog(this);
             if (rVal == JFileChooser.APPROVE_OPTION) {
                 file_name.setText(c.getSelectedFile().getName());
                 dir.setText(c.getCurrentDirectory().toString());
-      }
-        } else if (cmd.equals("exit")) {
+            }
+   
+        }else if (cmd.equals("exit")) {
             System.exit(0);
         } 
     }

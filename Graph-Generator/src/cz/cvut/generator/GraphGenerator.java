@@ -55,7 +55,7 @@ public class GraphGenerator {
 //        g.generateCyclic();
 //        Graph graf = g.getGraph();
 //        for(Edge e: graf.getEdges()) System.out.println(e);
-        //OutputParser op = new OutputParser(g, OutputType.INCIDENCE);
-        //op.generateOutput();
+//        OutputParser op = new OutputParser(g, OutputType.INCIDENCE);
+//        op.generateOutput();
     }
 }

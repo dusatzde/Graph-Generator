@@ -16,10 +16,12 @@ import java.util.List;
  */
 public class OutputParser {
     
-    Generator gen;
-    OutputType ot;
+    private String path;
+    private Generator gen;
+    private OutputType ot;
     
-    public OutputParser(Generator gen, OutputType ot) {
+    public OutputParser(Generator gen, OutputType ot, String path) {
+        this.path = path;
         this.gen = gen;
         this.ot = ot;
     }
@@ -46,7 +48,7 @@ public class OutputParser {
     
     private void generateTrivialOutput() throws FileNotFoundException {
         System.out.println("Start of generating output file - Trivial Graph");
-        PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
+        PrintWriter out = new PrintWriter(new FileOutputStream(path));
         Graph g = this.gen.getGraph();
         List<Node> nodes = g.getNodes();
         List<Edge> edges = g.getEdges();
@@ -66,7 +68,7 @@ public class OutputParser {
     
     private void generateAdjacencyOutput() throws FileNotFoundException {
         System.out.println("Start of generating output file - Adjacency matrix");
-        PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
+        PrintWriter out = new PrintWriter(new FileOutputStream(path));
         
         Graph g = this.gen.getGraph();
         List<GraphType> properties = gen.getProperties();
@@ -143,7 +145,7 @@ public class OutputParser {
     
     private void GenerateIncidenceOutput() throws FileNotFoundException{
         System.out.println("Start of generating output file - Incidence matrix Graph");
-        PrintWriter out = new PrintWriter(new FileOutputStream("output.txt"));
+        PrintWriter out = new PrintWriter(new FileOutputStream(path));
         
         Graph g = this.gen.getGraph();
         List<Node> nodes = g.getNodes();
