@@ -19,6 +19,7 @@ public class OutputParser {
     private String path;
     private Generator gen;
     private OutputType ot;
+    private Graph graph;
     
     public OutputParser(Generator gen, OutputType ot, String path) {
         this.path = path;
@@ -176,7 +177,7 @@ public class OutputParser {
     }
 
     private void generateDOT() throws FileNotFoundException {
-        PrintWriter out = new PrintWriter(new FileOutputStream("output.dot"));
+        PrintWriter out = new PrintWriter(new FileOutputStream(path));
         List<Edge> edges = graph.getEdges();
         List<Node> nodes = graph.getNodes();
         Iterator<Edge> it = edges.iterator();
@@ -229,7 +230,7 @@ public class OutputParser {
     }
 
     private void generateXML() throws FileNotFoundException {
-        PrintWriter out = new PrintWriter(new FileOutputStream("output.xml"));
+        PrintWriter out = new PrintWriter(new FileOutputStream(path));
         List<Edge> edges = graph.getEdges();
         List<Node> nodes = graph.getNodes();
 

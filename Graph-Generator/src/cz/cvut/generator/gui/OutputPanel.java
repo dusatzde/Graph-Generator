@@ -6,10 +6,8 @@ package cz.cvut.generator.gui;
 
 import cz.cvut.generator.gui.listeners.GenerateActionListener;
 import cz.cvut.generator.gui.util.Components;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +25,7 @@ import javax.swing.border.Border;
  * @author ZDENEK
  */
 public class OutputPanel extends JPanel implements ActionListener{
-    private String[] formats = {"Trivial Graph Format", "DOT", "Incidence Matrix", "Adjacency matrix"};
+    private String[] formats = {"Trivial Graph Format", "DOT", "XML", "Incidence Matrix", "Adjacency matrix"};
     private JLabel file_format_label = new JLabel("Select output format:");
     private JComboBox  file_format = new JComboBox(formats);
     private JLabel file_name_label = new JLabel("File name:");
@@ -119,11 +117,11 @@ public class OutputPanel extends JPanel implements ActionListener{
         String cmd = e.getActionCommand();
         if (cmd.equals("browse")) {
             JFileChooser c = new JFileChooser();
-            ((JLabel)Components.component.get("filePathErrMsg")).setVisible(false);
+            file_path_err_msg.setVisible(false);
             int rVal = c.showSaveDialog(this);
             if (rVal == JFileChooser.APPROVE_OPTION) {
                 file_name.setText(c.getSelectedFile().getName());
-                dir.setText(c.getCurrentDirectory().toString());
+                dir.setText(c.getSelectedFile().getAbsolutePath());
             }
    
         }else if (cmd.equals("exit")) {
