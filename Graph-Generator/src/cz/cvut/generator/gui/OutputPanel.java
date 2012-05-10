@@ -29,9 +29,9 @@ public class OutputPanel extends JPanel implements ActionListener{
     private JLabel file_format_label = new JLabel("Select output format:");
     private JComboBox  file_format = new JComboBox(formats);
     private JLabel file_name_label = new JLabel("File name:");
-    private JTextField file_name = new JTextField();
+    private JTextField file_name = new JTextField(10);
     private JLabel file_path_label = new JLabel("Path:");
-    private JTextField dir = new JTextField();
+    private JTextField dir = new JTextField(10);
     private JButton browseButton = new JButton("Browse");
     private JButton stopButton = new JButton("Stop");
     private JButton generateButton = new JButton("Generate");  
@@ -48,7 +48,9 @@ public class OutputPanel extends JPanel implements ActionListener{
         componentsLayoutInit();
          Components.component.put("fileFormat", file_format);
          Components.component.put("fileName", file_name);
+         file_name.setSize(20, 40);
          Components.component.put("dir", dir);
+         dir.setSize(20, 40);
          Components.component.put("generateButton", generateButton);
          Components.component.put("stopButton", stopButton);
          Components.component.put("filePathErrMsg", file_path_err_msg);

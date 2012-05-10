@@ -53,17 +53,25 @@ public class GenerateActionListener implements ActionListener {
 
         /* checking input settings*/
         if (!createInputSettingsModel()) {
-            ta.setText("");
+            ta.setText("\nBad input parametrs.\n" + ta.getText());
             return;
         }
 
         /*checking output settings*/
         JTextField dirField = (JTextField) Components.component.get("dir");
+        dir = dirField.getText();
+        dir = dir.trim();
+
+        if ( dir.compareTo("") == 0) {
+            ((JLabel) Components.component.get("filePathErrMsg")).setVisible(true);
+            ta.setText("\nBad input parametrs.\n" + ta.getText());
+            return;
+        }
 
         /* generate graph*/
         generateButton.setEnabled(false);
         stopButton.setVisible(true);
-        ta.setText("In progress...");
+        ta.setText("\nIn progress...\n" +  ta.getText());
 
         g = new Generator();
         g.setNodesCount(inputSettings.getNodeCount());
@@ -73,13 +81,7 @@ public class GenerateActionListener implements ActionListener {
         g.initialize();
         g.generate();
        
-        dir = dirField.getText();
-        dir = dir.trim();
-
-        if ( dir.compareTo("") == 0) {
-            ((JLabel) Components.component.get("filePathErrMsg")).setVisible(true);
-            return;
-        }
+        
 
         
         JComboBox fileFormatField = ((JComboBox) Components.component.get("fileFormat"));
@@ -115,7 +117,7 @@ public class GenerateActionListener implements ActionListener {
                 }
 
                 ta.setText("In progress...                            [ 100% ]\n"
-                         + "Graph complete...                         in file: [ " + dir + " ]");
+                         + "Graph complete...                         in file: [ " + dir + " ]\n\n" + ta.getText() );
                 generateButton.setEnabled(true);
                 stopButton.setVisible(false);
 //            }
