@@ -89,11 +89,20 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     }
     
     public void generateComplete(){
-        for(int i = 0; i < nodeCount; i++){
-            for(int j = 0; j < nodeCount; j++){
-                if(nodes[i].getId() != nodes[j].getId())edgeList.add(new Edge(nodes[i], nodes[j]));
+        if(directed){
+            for(int i = 0; i < nodeCount; i++){
+                for(int j = 0; j < nodeCount; j++){
+                    if(nodes[i].getId() != nodes[j].getId())edgeList.add(new Edge(nodes[i], nodes[j]));
+                }
             }
         }
+        else{
+            for(int i = 0; i < nodeCount; i++){
+                for(int j = i+1; j < nodeCount; j++){
+                    edgeList.add(new Edge(nodes[i], nodes[j]));
+                }
+            }
+        }           
     }
     
     public void generateSimple(){
@@ -118,15 +127,20 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
             //multiplicity check
             if(!edgeList.contains(e) && a != b){
                 edgeList.add(e);
-                connectedPart.add(a);               
+                connectedPart.add(a);
+                //add random number of edges coming from a
+                noEdge = rand.nextInt(maxDensity);
+                for(int i = 0; i < noEdge; i++){
+                    b = nodes[rand.nextInt(nodeCount)];
+                    if(!edgeList.contains(e) && a != b)edgeList.add(new Edge(a, b));
+                    connectedPart.add(b);
+                }    
             }
-            //add random number of edges coming from a
-            noEdge = rand.nextInt(maxDensity);
-            for(int i = 0; i < noEdge; i++){
-                b = nodes[rand.nextInt(nodeCount)];
-                if(a != b)edgeList.add(new Edge(a, b));
-                connectedPart.add(b);
-            }          
+            else notUsed.add(a);
+        }
+        //multiplicity check for undirected graph
+        for(Edge ed: edgeList){
+            if(edgeList.contains(new Edge(ed.getNodeTo(), ed.getNodeFrom())))edgeList.remove(ed);
         }
     }
     
