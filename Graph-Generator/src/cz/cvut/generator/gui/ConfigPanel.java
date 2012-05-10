@@ -51,6 +51,7 @@ public class ConfigPanel extends JPanel {
     private JRadioButton cyclicGraphType = new JRadioButton("Cyclic");
     private JRadioButton acyclicGraphType = new JRadioButton("Acyclic");
     private JRadioButton bipartiteGraphType = new JRadioButton("Bipartite");
+    private JRadioButton completeGraphType = new JRadioButton("Complete");
     private Border border;
 
     public ConfigPanel() {
@@ -110,6 +111,10 @@ public class ConfigPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 5;
         this.add(bipartiteGraphType, gbc);
+        
+        gbc.gridx = 2;
+        gbc.gridy = 5;
+        this.add(completeGraphType, gbc);
 
 
         gbc.gridx = 1;
@@ -196,6 +201,7 @@ public class ConfigPanel extends JPanel {
         Components.component.put("discreteGraphType", discreteGraphType);
         Components.component.put("treeGraphType", treeGraphType);
         Components.component.put("cyclicGraphType", cyclicGraphType);
+        Components.component.put("completeGraphType", completeGraphType);
 
         Components.component.put("bipartiteGraphType", bipartiteGraphType);
         Components.component.put("nVertexCount", n_vertex_count);
@@ -218,20 +224,14 @@ public class ConfigPanel extends JPanel {
 
     private void initGraphTypes() {
         buttonGroup = new ButtonGroup();
-        simpleGraphType = new JRadioButton("Simple");
         simpleGraphType.setSelected(true);
-
         buttonGroup.add(simpleGraphType);
-        discreteGraphType = new JRadioButton("Discrete");
         buttonGroup.add(discreteGraphType);
-        treeGraphType = new JRadioButton("Tree");
         buttonGroup.add(treeGraphType);
-        cyclicGraphType = new JRadioButton("Cyclic");
         buttonGroup.add(cyclicGraphType);
-        acyclicGraphType = new JRadioButton("Acyclic");
         buttonGroup.add(acyclicGraphType);
-        bipartiteGraphType = new JRadioButton("Bipartite");
         buttonGroup.add(bipartiteGraphType);
+        buttonGroup.add(completeGraphType);
 
 
         ChangeListener changeListener = new ChangeListener() {

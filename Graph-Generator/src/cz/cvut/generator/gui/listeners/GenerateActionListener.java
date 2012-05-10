@@ -18,7 +18,6 @@ import cz.cvut.generator.gui.util.IntegerRequiredValidator;
 import cz.cvut.generator.gui.util.IntegerValidatorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,6 @@ public class GenerateActionListener implements ActionListener {
         }
 
         /*checking output settings*/
-        JTextField fileNameField = (JTextField) Components.component.get("fileName");
         JTextField dirField = (JTextField) Components.component.get("dir");
 
         /* generate graph*/
@@ -71,27 +69,10 @@ public class GenerateActionListener implements ActionListener {
         g.setNodesCount(inputSettings.getNodeCount());
         g.setMaxEdgeWeight(inputSettings.getMaxWeight());
         g.setMinEdgeWeight(inputSettings.getMinWeight());
-
         g.setProperties(inputSettings.getProperties());
         g.initialize();
-
-        if (inputSettings.getType() == GraphType.SIMPLE) {
-            g.generateSimple();
-        } else if (inputSettings.getType() == GraphType.DISCRETE) {
-            g.generate();
-        } else if (inputSettings.getType() == GraphType.BIPARTITE) {
-            g.generateBipartite();
-        } else if (inputSettings.getType() == GraphType.COMPLETE) {
-            g.generateComplete();
-        } else if (inputSettings.getType() == GraphType.TREE) {
-            g.generateTree();
-        } else if (inputSettings.getType() == GraphType.CYCLIC) {
-            g.generateCyclic();
-        } else if (inputSettings.getType() == GraphType.ACYCLIC) {
-            g.generateAcyclic();
-        }
-
-
+        g.generate();
+       
         dir = dirField.getText();
         dir = dir.trim();
 
@@ -134,7 +115,7 @@ public class GenerateActionListener implements ActionListener {
                 }
 
                 ta.setText("In progress...                            [ 100% ]\n"
-                        + "Graph complete...             in file: [ " + dir + " ]");
+                         + "Graph complete...                         in file: [ " + dir + " ]");
                 generateButton.setEnabled(true);
                 stopButton.setVisible(false);
 //            }
@@ -144,11 +125,10 @@ public class GenerateActionListener implements ActionListener {
 
     private boolean createInputSettingsModel() {
         boolean status = true;
-        GraphType type = getGraphType();
         int vertexCount = 0;
-        inputSettings = new GInputSettings(type, getProperties());
+        inputSettings = new GInputSettings(getProperties());
 
-        if (type != GraphType.BIPARTITE) {
+        if (getGraphType() != GraphType.BIPARTITE) {
             JLabel vertexCountErrMsg = (JLabel) Components.component.get("VertexCountErrMsg");
             try {
                 vertexCount = IntegerRequiredValidator.isValid((JTextField) Components.component.get("VertexCount"));
@@ -167,6 +147,8 @@ public class GenerateActionListener implements ActionListener {
                 n = IntegerRequiredValidator.isValid((JTextField) Components.component.get("nVertexCount"));
                 nVertexCountErrMsg.setVisible(false);
                 inputSettings.setN(n);
+                
+                
             } catch (IntegerValidatorException ex) {
                 nVertexCountErrMsg.setVisible(true);
                 status = false;
@@ -180,6 +162,8 @@ public class GenerateActionListener implements ActionListener {
                 mVertexCountErrMsg.setVisible(true);
                 status = false;
             }
+            // TODO /////////////////////////////////////////////////
+            inputSettings.setNodeCount(n + m);
         }
 
 
@@ -211,6 +195,7 @@ public class GenerateActionListener implements ActionListener {
 
     private List<GraphType> getProperties() {
         List<GraphType> properties = new ArrayList<GraphType>();
+        properties.add(getGraphType());
         if (((JCheckBox) Components.component.get("directed")).isSelected()) {
             properties.add(GraphType.DIRECTED);
         }
@@ -239,8 +224,8 @@ public class GenerateActionListener implements ActionListener {
         if (((JRadioButton) Components.component.get("acyclicGraphType")).isSelected()) {
             return GraphType.ACYCLIC;
         }
-        if (((JRadioButton) Components.component.get("simpleGraphType")).isSelected()) {
-            return GraphType.SIMPLE;
+        if (((JRadioButton) Components.component.get("completeGraphType")).isSelected()) {
+            return GraphType.COMPLETE;
         }
         return null;
     }

@@ -46,8 +46,10 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     //TODO
     public void generate(){
         initialize();
+        System.out.println("TYPE: " + graphType);
         switch(graphType){
             case COMPLETE:
+                System.out.println("HERE COMPLETE");
                 generateComplete();
                 break;
             case SIMPLE:
@@ -88,8 +90,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     
     public void generateComplete(){
         for(int i = 0; i < nodeCount; i++){
-            for(int j = i+1; j < nodeCount; j++){
-                edgeList.add(new Edge(nodes[i], nodes[j]));
+            for(int j = 0; j < nodeCount; j++){
+                if(nodes[i].getId() != nodes[j].getId())edgeList.add(new Edge(nodes[i], nodes[j]));
             }
         }
     }
@@ -182,10 +184,12 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     //TODO
     public void generateCyclic(){
         int cycleSize;
+        int cycleCount;
         Node startNode, tmp1, tmp2;
         Edge e;
         int minCycleCount = (int) Math.sqrt(nodeCount)/2 + 1;
-        int cycleCount = rand.nextInt((int) Math.sqrt(nodeCount) - minCycleCount) + minCycleCount;
+        if(minCycleCount > (int)Math.sqrt(nodeCount) - 1)cycleCount = 1;
+        else cycleCount = rand.nextInt((int) Math.sqrt(nodeCount) - minCycleCount) + minCycleCount;
         ArrayList[] cycles = new ArrayList[cycleCount];
         boolean[] usedNodes = new boolean[nodeCount];
         
@@ -212,14 +216,14 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
             for(int j = 0; j < cycleSize; j++){
                 tmp2 = nodes[rand.nextInt(nodeCount)];
                 //node is not yet in this cycle
-                if(!cycles[i].contains(tmp2)){
+                //if(!cycles[i].contains(tmp2)){
                     e = new Edge(tmp1, tmp2);
                     edgeList.add(e);
                     cycles[i].add(tmp2);
                     usedNodes[(int)tmp2.getId()] = true;
                     tmp1 = tmp2;
-                }
-                else j--;
+                //}
+                //else j--;
             }
             //close the cycle
             e = new Edge(tmp1, startNode);
@@ -235,6 +239,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         //connect not yet used nodes
         for(int i = 0; i < nodeCount; i++){
             if(!usedNodes[i]){
+                System.out.println("NEpouzity uzel: " + nodes[i].getId());
                 int cycleNo = rand.nextInt(cycleCount);
                 tmp1 = (Node) cycles[cycleNo].get(rand.nextInt(cycles[cycleNo].size()));
                 if(i%2 == 0) e = new Edge(nodes[i], tmp1);

@@ -14,15 +14,13 @@ import java.util.List;
 public class GInputSettings {
     
     private int nodeCount;
-    private GraphType type;
     private List<GraphType> properties;
     private int n;
     private int m;
     private double minWeight;
     private double maxWeight;
 
-    public GInputSettings(GraphType type, List<GraphType> properties) {
-        this.type = type;
+    public GInputSettings(List<GraphType> properties) {
         this.properties = properties;
     }
 
@@ -40,14 +38,6 @@ public class GInputSettings {
 
     public void setProperties(List<GraphType> properties) {
         this.properties = properties;
-    }
-
-    public GraphType getType() {
-        return type;
-    }
-
-    public void setType(GraphType type) {
-        this.type = type;
     }
 
     public int getM() {
