@@ -15,12 +15,12 @@ import java.util.List;
  * @author Lenovo
  */
 public class OutputParser {
-   
+
     private String path;
     private Generator gen;
     private OutputType ot;
     private Graph graph;
-    
+
     public OutputParser(Generator gen, OutputType ot, String path) {
         this.path = path;
         this.gen = gen;
@@ -60,13 +60,17 @@ public class OutputParser {
 
         Iterator<Node> nodeIt = nodes.iterator();
         while (nodeIt.hasNext()) {
-            out.println(nodeIt.next().getLabel());
+            out.println(nodeIt.next().getId());
         }
 
         Iterator<Edge> edgeIt = edges.iterator();
         while (edgeIt.hasNext()) {
             Edge e = edgeIt.next();
-            out.println(e.getNodeFrom().getLabel() + " " + e.getNodeTo().getLabel());
+            if (graph.isWeighted()) {
+                out.printf("%d %d %.0f\n", e.getNodeFrom().getId(), e.getNodeTo().getId(), e.getWeight());
+            } else {
+                out.println(e.getNodeFrom().getId() + " " + e.getNodeTo().getId());
+            }
         }
         out.close();
     }
@@ -80,8 +84,8 @@ public class OutputParser {
         List<GraphType> properties = gen.getProperties();
         List<Node> nodes = g.getNodes();
         List<Edge> edges = g.getEdges();
-        boolean weighted = false;
-        boolean directed = false;
+        boolean weighted;
+        boolean directed;
 
         double[][] adjacencyMatrix = new double[nodes.size()][nodes.size()];
         for (int i = 0; i < nodes.size(); i++) {
@@ -125,7 +129,7 @@ public class OutputParser {
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < nodes.size(); j++) {
                 if (adjacencyMatrix[i][j] != Double.MAX_VALUE) {
-                    out.print(adjacencyMatrix[i][j] + " ");
+                    out.printf("%.0f ", adjacencyMatrix[i][j]);
                 } else {
                     if (weighted) {
                         out.print("inf ");
@@ -137,7 +141,7 @@ public class OutputParser {
             out.println("");
         }
 
-
+        System.out.println("End of generating adjacency matrix");
         out.close();
     }
 
@@ -193,13 +197,13 @@ public class OutputParser {
                 System.out.println("Start of generating output file - DOT (directed, weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
-                    out.println(e.getNodeFrom().getId() + " -> " + e.getNodeTo().getId() + "[label=" + e.getWeight() + "]");
+                    out.printf("%d -> %d[label=%.0f]\n", e.getNodeFrom().getId(), e.getNodeTo().getId(), e.getWeight());
                 }
             } else {
                 System.out.println("Start of generating output file - DOT (directed, not weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
-                    out.println(e.getNodeFrom().getId() + " -> " + e.getNodeTo().getId());
+                    out.printf("%d -> %d\n", e.getNodeFrom().getId(), e.getNodeTo().getId());
                 }
             }
         } else {
@@ -212,13 +216,13 @@ public class OutputParser {
                 System.out.println("Start of generating output file - DOT (not directed, weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
-                    out.println(e.getNodeFrom().getId() + " -- " + e.getNodeTo().getId() + "[label=" + e.getWeight() + "]");
+                    out.printf("%d -- %d[label=%.0f]\n", e.getNodeFrom().getId(), e.getNodeTo().getId(), e.getWeight());
                 }
             } else {
                 System.out.println("Start of generating output file - DOT (not directed, not weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
-                    out.println(e.getNodeFrom().getId() + " -- " + e.getNodeTo().getId());
+                    out.printf("%d -- %d\n", e.getNodeFrom().getId(), e.getNodeTo().getId());
                 }
             }
 
@@ -266,10 +270,10 @@ public class OutputParser {
         while (ite.hasNext()) {
             Edge e = ite.next();
             out.println("      <edge>");
-            out.println("         <nodeFrom>" + e.getNodeFrom().getId() + "</nodeFrom>");
-            out.println("         <nodeTo>" + e.getNodeTo().getId() + "</nodeTo>");
+            out.println("         <nodeFrom> " + e.getNodeFrom().getId() + " </nodeFrom>");
+            out.println("         <nodeTo> " + e.getNodeTo().getId() + " </nodeTo>");
             if (graph.isWeighted()) {
-                out.println("         <weight>" + e.getWeight() + "</weight>");
+                out.printf("         <weight> %.0f </weight>\n", e.getWeight());
             }
             out.println("      </edge>");
         }
