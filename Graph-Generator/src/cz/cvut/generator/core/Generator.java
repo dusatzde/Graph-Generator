@@ -15,6 +15,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
 
     Graph g;
     private int nodeCount;                     //number of nodes
+    private int bipartiteNodeCountP1;
+    private int bipartiteNodeCountP2;
     private double minWeight;                   //minimal weight of edge
     private double maxWeight;                   //maximal weight of edge
     private int componentCount;                 //number of graph components
@@ -167,21 +169,17 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         int edgeCount;
         Node a;
         Edge e;
+        nodeCount = bipartiteNodeCountP1 + bipartiteNodeCountP2;
         boolean[] usedNodes = new boolean[nodeCount];
         ArrayList<Node> part1 = new ArrayList(Arrays.asList(nodes));
         ArrayList<Node> part2 = new ArrayList<Node>();
-        int minPartSize = (int) Math.sqrt(nodeCount);
-        int part2size = rand.nextInt(nodeCount - minPartSize) + minPartSize;
-        //minimal part1 size ensuring
-        while (part2size > nodeCount - minPartSize) {
-            part2size = rand.nextInt(nodeCount - minPartSize) + minPartSize;
-        }
+        int part2size = bipartiteNodeCountP2;
         //choose nodes for part2
         for (int i = 0; i < part2size; i++) {
             part2.add(part1.remove(rand.nextInt(part1.size())));
         }
-        maxEdgeCountPart1 = (int) Math.sqrt(part2.size());
-        maxEdgeCountPart2 = (int) Math.sqrt(part1.size());
+        maxEdgeCountPart1 = 3 * (int) Math.sqrt(part2.size());
+        maxEdgeCountPart2 = 3 * (int) Math.sqrt(part1.size());
         //generate edges coming from part1 nodes
         for (Node n : part1) {
             edgeCount = rand.nextInt(maxEdgeCountPart1);
@@ -267,7 +265,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         for(Node n: notUsedNodes){
             index = rand.nextInt(cycleCount);
             tmp1 = (Node) cycles[index].get(rand.nextInt(cycles[index].size()));
-            if(rand.nextInt() == 0)edgeList.add(new Edge(n, tmp1));
+            if(rand.nextInt(2) == 0)edgeList.add(new Edge(n, tmp1));
             else edgeList.add(new Edge(tmp1, n));
         }        
     }
@@ -430,5 +428,11 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
 
     public List<GraphType> getProperties() {
         return this.properties;
+    }
+
+    @Override
+    public void setBipartiteNodesCount(int part1, int part2) {
+        bipartiteNodeCountP1 = part1;
+        bipartiteNodeCountP2 = part2;
     }
 }
