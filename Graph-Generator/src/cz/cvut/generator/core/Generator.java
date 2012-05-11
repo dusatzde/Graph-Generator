@@ -12,6 +12,7 @@ import java.util.*;
  * @author ZDENEK
  */
 public class Generator implements GeneratorOutputI, GeneratorConfigI {
+
     Graph g;
     private int nodeCount;                     //number of nodes
     private double minWeight;                   //minimal weight of edge
@@ -25,29 +26,35 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     private boolean weighted;
     private Random rand;
     private GraphType graphType;
-    
-    
-    public Generator(){
+
+    public Generator() {
         g = new Graph();
         directed = false;
         weighted = false;
         rand = new Random();
     }
-    
-    public void initialize(){
+
+    public void initialize() {
         generateNodes();
         edgeList = new ArrayList<Edge>();
-        if(properties.contains(GraphType.DIRECTED))directed = true;
-        if(properties.contains(GraphType.WEIGHTED))weighted = true;
-        if(properties.isEmpty()) graphType = GraphType.SIMPLE;
-        else graphType = properties.get(0);
+        if (properties.contains(GraphType.DIRECTED)) {
+            directed = true;
+        }
+        if (properties.contains(GraphType.WEIGHTED)) {
+            weighted = true;
+        }
+        if (properties.isEmpty()) {
+            graphType = GraphType.SIMPLE;
+        } else {
+            graphType = properties.get(0);
+        }
     }
-    
+
     //TODO
-    public void generate(){
+    public void generate() {
         initialize();
         System.out.println("TYPE: " + graphType);
-        switch(graphType){
+        switch (graphType) {
             case COMPLETE:
                 System.out.println("HERE COMPLETE");
                 generateComplete();
@@ -67,46 +74,47 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
             case DISCRETE:
                 break;
             default:
-                break;               
+                break;
         }
     }
-    
-    private void generateNodes(){
+
+    private void generateNodes() {
         nodes = new Node[nodeCount];
         //creation array of nodes with id from 0 to nodeCount
-        for(int i = 0; i < nodeCount; i++){
+        for (int i = 0; i < nodeCount; i++) {
             nodes[i] = new Node(i, "Node: " + Integer.toString(i));         //or should id's be random???
         }
         //shuffle array
-        for(int i = 0; i < nodeCount; i++){
+        for (int i = 0; i < nodeCount; i++) {
             int rna = rand.nextInt(nodeCount);
             int rnb = rand.nextInt(nodeCount);
             Node tmp = nodes[rna];
             nodes[rna] = nodes[rnb];
-            nodes[rnb] = tmp;            
+            nodes[rnb] = tmp;
         }
         nodeList = new ArrayList<Node>(Arrays.asList(nodes));
     }
-    
-    public void generateComplete(){
-        if(directed){
-            for(int i = 0; i < nodeCount; i++){
-                for(int j = 0; j < nodeCount; j++){
-                    if(nodes[i].getId() != nodes[j].getId())edgeList.add(new Edge(nodes[i], nodes[j]));
+
+    public void generateComplete() {
+        if (directed) {
+            for (int i = 0; i < nodeCount; i++) {
+                for (int j = 0; j < nodeCount; j++) {
+                    if (nodes[i].getId() != nodes[j].getId()) {
+                        edgeList.add(new Edge(nodes[i], nodes[j]));
+                    }
                 }
             }
-        }
-        else{
-            for(int i = 0; i < nodeCount; i++){
-                for(int j = i+1; j < nodeCount; j++){
+        } else {
+            for (int i = 0; i < nodeCount; i++) {
+                for (int j = i + 1; j < nodeCount; j++) {
                     edgeList.add(new Edge(nodes[i], nodes[j]));
                 }
             }
-        }           
+        }
     }
-    
-    public void generateSimple(){
-        int maxDensity = (int)Math.sqrt(nodeCount); //maximal number of edges from one node
+
+    public void generateSimple() {
+        int maxDensity = (int) Math.sqrt(nodeCount); //maximal number of edges from one node
         //System.out.println("max density: " + maxDensity);
         int noEdge = 0;
         Edge e;
@@ -117,36 +125,43 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         edgeList.add(new Edge(a, b));
         connectedPart.add(a);
         connectedPart.add(b);
-        while(!notUsed.isEmpty()){
+        while (!notUsed.isEmpty()) {
             a = notUsed.remove(rand.nextInt(notUsed.size()));
             //connect a to rest of yet connected graph
             b = connectedPart.get(rand.nextInt(connectedPart.size()));
             //switching orientation
-            if(rand.nextInt(2) == 0) e = new Edge(a, b);
-            else e = new Edge(b, a);
+            if (rand.nextInt(2) == 0) {
+                e = new Edge(a, b);
+            } else {
+                e = new Edge(b, a);
+            }
             //multiplicity check
-            if(!edgeList.contains(e) && a != b){
+            if (!edgeList.contains(e) && a != b) {
                 edgeList.add(e);
                 connectedPart.add(a);
                 //add random number of edges coming from a
                 noEdge = rand.nextInt(maxDensity);
-                for(int i = 0; i < noEdge; i++){
+                for (int i = 0; i < noEdge; i++) {
                     b = nodes[rand.nextInt(nodeCount)];
-                    if(!edgeList.contains(e) && a != b)edgeList.add(new Edge(a, b));
+                    if (!edgeList.contains(e) && a != b) {
+                        edgeList.add(new Edge(a, b));
+                    }
                     connectedPart.add(b);
-                }    
+                }
+            } else {
+                notUsed.add(a);
             }
-            else notUsed.add(a);
         }
         //multiplicity check for undirected graph
-        for(Edge ed: edgeList){
-            if(edgeList.contains(new Edge(ed.getNodeTo(), ed.getNodeFrom())))edgeList.remove(ed);
+        for (Edge ed : edgeList) {
+            if (edgeList.contains(new Edge(ed.getNodeTo(), ed.getNodeFrom()))) {
+                edgeList.remove(ed);
+            }
         }
     }
-    
-    
+
     //TODO
-    public void generateBipartite(){
+    public void generateBipartite() {
         int maxEdgeCountPart1;
         int maxEdgeCountPart2;
         int edgeCount;
@@ -156,86 +171,97 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         ArrayList<Node> part1 = new ArrayList(Arrays.asList(nodes));
         ArrayList<Node> part2 = new ArrayList<Node>();
         int minPartSize = (int) Math.sqrt(nodeCount);
-        int part2size = rand.nextInt(nodeCount  - minPartSize) + minPartSize;
+        int part2size = rand.nextInt(nodeCount - minPartSize) + minPartSize;
         //minimal part1 size ensuring
-        while(part2size > nodeCount - minPartSize) part2size = rand.nextInt(nodeCount  - minPartSize) + minPartSize;
+        while (part2size > nodeCount - minPartSize) {
+            part2size = rand.nextInt(nodeCount - minPartSize) + minPartSize;
+        }
         //choose nodes for part2
-        for(int i = 0; i < part2size; i++){
+        for (int i = 0; i < part2size; i++) {
             part2.add(part1.remove(rand.nextInt(part1.size())));
         }
-        maxEdgeCountPart1 = (int)Math.sqrt(part2.size());
-        maxEdgeCountPart2 = (int)Math.sqrt(part1.size());
+        maxEdgeCountPart1 = (int) Math.sqrt(part2.size());
+        maxEdgeCountPart2 = (int) Math.sqrt(part1.size());
         //generate edges coming from part1 nodes
-        for(Node n: part1){
+        for (Node n : part1) {
             edgeCount = rand.nextInt(maxEdgeCountPart1);
             //erase used flags
-            for(int i = 0; i < nodeCount; i++){
+            for (int i = 0; i < nodeCount; i++) {
                 usedNodes[i] = false;
             }
-            for(int i = 0; i < edgeCount; i++){
+            for (int i = 0; i < edgeCount; i++) {
                 a = part2.get(rand.nextInt(part2.size()));
                 e = new Edge(n, a);
-                if(!usedNodes[(int)a.getId()]) edgeList.add(e);
-                usedNodes[(int)a.getId()] = true;
+                if (!usedNodes[(int) a.getId()]) {
+                    edgeList.add(e);
+                }
+                usedNodes[(int) a.getId()] = true;
             }
         }
         //generate edges coming from part2 nodes
-        for(Node n: part2){
+        for (Node n : part2) {
             edgeCount = rand.nextInt(maxEdgeCountPart2);
             //erase used flags
-            for(int i = 0; i < nodeCount; i++){
+            for (int i = 0; i < nodeCount; i++) {
                 usedNodes[i] = false;
             }
-            for(int i = 0; i < edgeCount; i++){
+            for (int i = 0; i < edgeCount; i++) {
                 a = part1.get(rand.nextInt(part1.size()));
                 e = new Edge(n, a);
-                if(!usedNodes[(int)a.getId()]) edgeList.add(e);
-                usedNodes[(int)a.getId()] = true;
+                if (!usedNodes[(int) a.getId()]) {
+                    edgeList.add(e);
+                }
+                usedNodes[(int) a.getId()] = true;
             }
         }
     }
-    
+
     //TODO
-    public void generateCyclic(){
+    public void generateCyclic() {
         int cycleSize;
         int cycleCount;
         Node startNode, tmp1, tmp2;
         Edge e;
-        int minCycleCount = (int) Math.sqrt(nodeCount)/2 + 1;
-        if(minCycleCount > (int)Math.sqrt(nodeCount) - 1)cycleCount = 1;
-        else cycleCount = rand.nextInt((int) Math.sqrt(nodeCount) - minCycleCount) + minCycleCount;
+        int minCycleCount = (int) Math.sqrt(nodeCount) / 2 + 1;
+        if (minCycleCount > (int) Math.sqrt(nodeCount) - 1) {
+            cycleCount = 1;
+        } else {
+            cycleCount = rand.nextInt((int) Math.sqrt(nodeCount) - minCycleCount) + minCycleCount;
+        }
         ArrayList[] cycles = new ArrayList[cycleCount];
         boolean[] usedNodes = new boolean[nodeCount];
-        
-        for(int i = 0; i < nodeCount; i++){
+
+        for (int i = 0; i < nodeCount; i++) {
             usedNodes[i] = false;
         }
-        
+
         //cycles generation
-        for(int i = 0; i < cycleCount; i++){
+        for (int i = 0; i < cycleCount; i++) {
             cycles[i] = new ArrayList<Node>();
-            cycleSize = rand.nextInt(nodeCount - (int) Math.sqrt(nodeCount)/2) + (int) Math.sqrt(nodeCount)/2;
+            cycleSize = rand.nextInt(nodeCount - (int) Math.sqrt(nodeCount) / 2) + (int) Math.sqrt(nodeCount) / 2;
             startNode = nodes[rand.nextInt(nodeCount)];
             tmp1 = nodes[rand.nextInt(nodeCount)];
             //we need two different nodes
-            while(tmp1 == startNode) tmp1 = nodes[rand.nextInt(nodeCount)];
+            while (tmp1 == startNode) {
+                tmp1 = nodes[rand.nextInt(nodeCount)];
+            }
             //first edge of cycle
             e = new Edge(startNode, tmp1);
             edgeList.add(e);
             cycles[i].add(startNode);
             cycles[i].add(tmp1);
-            usedNodes[(int)startNode.getId()] = true;
-            usedNodes[(int)tmp1.getId()] = true;
+            usedNodes[(int) startNode.getId()] = true;
+            usedNodes[(int) tmp1.getId()] = true;
             //rest edges od cycle
-            for(int j = 0; j < cycleSize; j++){
+            for (int j = 0; j < cycleSize; j++) {
                 tmp2 = nodes[rand.nextInt(nodeCount)];
                 //node is not yet in this cycle
                 //if(!cycles[i].contains(tmp2)){
-                    e = new Edge(tmp1, tmp2);
-                    edgeList.add(e);
-                    cycles[i].add(tmp2);
-                    usedNodes[(int)tmp2.getId()] = true;
-                    tmp1 = tmp2;
+                e = new Edge(tmp1, tmp2);
+                edgeList.add(e);
+                cycles[i].add(tmp2);
+                usedNodes[(int) tmp2.getId()] = true;
+                tmp1 = tmp2;
                 //}
                 //else j--;
             }
@@ -244,100 +270,97 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
             edgeList.add(e);
         }
         //assurment of graph connection
-        for(int i = 0; i < cycleCount - 1; i = i+2){
+        for (int i = 0; i < cycleCount - 1; i = i + 2) {
             tmp1 = (Node) cycles[i].get(rand.nextInt(cycles[i].size()));
-            tmp2 = (Node) cycles[i+1].get(rand.nextInt(cycles[i+1].size()));
+            tmp2 = (Node) cycles[i + 1].get(rand.nextInt(cycles[i + 1].size()));
             e = new Edge(tmp1, tmp2);
-            if(!edgeList.contains(e)) edgeList.add(e);
-        }
-        //connect not yet used nodes
-        for(int i = 0; i < nodeCount; i++){
-            if(!usedNodes[i]){
-                System.out.println("NEpouzity uzel: " + nodes[i].getId());
-                int cycleNo = rand.nextInt(cycleCount);
-                tmp1 = (Node) cycles[cycleNo].get(rand.nextInt(cycles[cycleNo].size()));
-                if(i%2 == 0) e = new Edge(nodes[i], tmp1);
-                else e = new Edge(tmp1, nodes[i]);
+            if (!edgeList.contains(e)) {
                 edgeList.add(e);
             }
         }
-        
-    }
-    
-    //TODO
-    public void generateAcyclic(){
-        
-    }
-    
-    //TODO
-    public void generateTree(){
-        generateCyclic();
-        
-        Iterator<Edge> ite = edgeList.iterator();
-        ArrayList<Edge> le = new ArrayList <Edge>();
-        
-        int cnt = 0;
-        int [] cycles = new int[nodeCount];
-        for(int i = 0; i < nodeCount; i++){
-            cycles[i] = i;
-        }
-        while(cnt < nodeCount-1 && ite.hasNext()){
-            Edge e = ite.next();
-            if(cycles[(int)e.getNodeFrom().getId()] != cycles[(int)e.getNodeTo().getId()]){
-                int from = cycles[(int)e.getNodeFrom().getId()];
-                int to = cycles[(int)e.getNodeTo().getId()];
-                for(int i = 0; i < nodeCount; i++){
-                    if(cycles[i] == from){
-                        cycles[i] = to;
-                    }
+        //connect not yet used nodes
+        for (int i = 0; i < nodeCount; i++) {
+            if (!usedNodes[i]) {
+                System.out.println("NEpouzity uzel: " + nodes[i].getId());
+                int cycleNo = rand.nextInt(cycleCount);
+                tmp1 = (Node) cycles[cycleNo].get(rand.nextInt(cycles[cycleNo].size()));
+                if (i % 2 == 0) {
+                    e = new Edge(nodes[i], tmp1);
+                } else {
+                    e = new Edge(tmp1, nodes[i]);
                 }
-                cnt++;
-                le.add(e);
+                edgeList.add(e);
             }
         }
-        edgeList = le;
-        Iterator <Edge> ite2 = le.iterator();
-        while(ite2.hasNext()){
-            System.out.println(ite2.next().getWeight());
-        }
-        
-        
-        
+
     }
-    
+
+    //TODO
+    public void generateAcyclic() {
+    }
+
+    //TODO
+    public void generateTree() {
+        Random r = new Random();
+        int cnt = 1;
+
+        Map<Integer, Boolean> used = new HashMap<Integer, Boolean>();
+        for (int i = 0; i < nodeCount; i++) {
+            used.put(i, false);
+        }
+        Node n1 = new Node(r.nextInt(nodeCount), null);
+        Node n2 = new Node(r.nextInt(nodeCount), null);
+        Edge e = new Edge(n1, n2);
+        edgeList.add(e);
+        used.put((int) n1.getId(), true);
+        used.put((int) n2.getId(), true);
+
+        while (cnt < nodeCount - 1) {
+            n1 = new Node(r.nextInt(nodeCount), null);
+            n2 = new Node(r.nextInt(nodeCount), null);
+            if (!used.get((int) n2.getId()) && used.get((int) n1.getId())) {
+                e = new Edge(n1, n2);
+                edgeList.add(e);
+                used.put((int) n1.getId(), true);
+                used.put((int) n2.getId(), true);
+                cnt++;
+            }
+        }
+    }
+
     //TO ERASE
     //dummy method for parser testing
-    public void generateFullDummy(){
+    public void generateFullDummy() {
         int nodeCount = 1000;   //set number of nodes as you wish
-        
+
         ArrayList<Edge> edges = new ArrayList<Edge>();
         ArrayList<Node> nodesList = new ArrayList<Node>();
         Node[] nodes = new Node[nodeCount];
-        for(int i = 0; i < nodeCount; i++){
-            nodes[i] = new Node(i+1, "N:"+(i+1));
+        for (int i = 0; i < nodeCount; i++) {
+            nodes[i] = new Node(i + 1, "N:" + (i + 1));
             nodesList.add(nodes[i]);
         }
-        for(int i = 0; i < nodeCount; i++){
-            for(int j = i+1; j < nodeCount; j++){
+        for (int i = 0; i < nodeCount; i++) {
+            for (int j = i + 1; j < nodeCount; j++) {
                 edges.add(new Edge(nodes[i], nodes[j]));
             }
         }
-        
+
         g.setDirected(false);
         g.setEdges(edges);
-        g.setNodes(nodesList);       
+        g.setNodes(nodesList);
     }
-    
-    private void prepareOutputGraph(){
-        if(weighted){
-            for(Edge e: edgeList){
-            e.setWeight(rand.nextDouble() * (maxWeight - minWeight) + minWeight);
+
+    private void prepareOutputGraph() {
+        if (weighted) {
+            for (Edge e : edgeList) {
+                e.setWeight(rand.nextDouble() * (maxWeight - minWeight) + minWeight);
             }
-        }        
+        }
         g.setEdges(edgeList);
         g.setNodes(nodeList);
-        g.setDirected(directed);            
-        g.setWeighted(weighted);        
+        g.setDirected(directed);
+        g.setWeighted(weighted);
     }
 
     @Override
@@ -370,11 +393,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     public void setComponentCount(int componentCount) {
         this.componentCount = componentCount;
     }
-    
-    public List<GraphType> getProperties(){
+
+    public List<GraphType> getProperties() {
         return this.properties;
     }
-    
-    
-    
 }
