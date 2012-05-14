@@ -5,8 +5,6 @@
 package cz.cvut.generator.gui.listeners;
 
 import cz.cvut.generator.core.Generator;
-import cz.cvut.generator.graph.Edge;
-import cz.cvut.generator.graph.Graph;
 import cz.cvut.generator.graph.GraphType;
 import cz.cvut.generator.graph.OutputParser;
 import cz.cvut.generator.graph.OutputType;
@@ -41,7 +39,6 @@ public class GenerateActionListener implements ActionListener {
     private Generator g;
     private JTextArea ta;
     private JButton generateButton;
-    private JButton stopButton;
     private OutputType outputFormat;
     private String dir;
 
@@ -49,7 +46,6 @@ public class GenerateActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         ta = (JTextArea) Components.component.get("LogTextArea");
         generateButton = (JButton) Components.component.get("generateButton");
-        stopButton = (JButton) Components.component.get("stopButton");
 
         /* checking input settings*/
         if (!createInputSettingsModel()) {
@@ -62,7 +58,7 @@ public class GenerateActionListener implements ActionListener {
         dir = dirField.getText();
         dir = dir.trim();
 
-        if ( dir.compareTo("") == 0) {
+        if (dir.compareTo("") == 0) {
             ((JLabel) Components.component.get("filePathErrMsg")).setVisible(true);
             ta.setText("\nBad input parametrs.\n" + ta.getText());
             return;
@@ -70,20 +66,17 @@ public class GenerateActionListener implements ActionListener {
 
         /* generate graph*/
         generateButton.setEnabled(false);
-        stopButton.setVisible(true);
-        ta.setText("\nIn progress...\n" +  ta.getText());
+        ta.setText("\nIn progress...\n" + ta.getText());
 
         g = new Generator();
         g.setNodesCount(inputSettings.getNodeCount());
         g.setMaxEdgeWeight(inputSettings.getMaxWeight());
         g.setMinEdgeWeight(inputSettings.getMinWeight());
         g.setProperties(inputSettings.getProperties());
+        g.setBipartiteNodesCount(inputSettings.getN(), inputSettings.getM());
         g.initialize();
         g.generate();
-       
-        
 
-        
         JComboBox fileFormatField = ((JComboBox) Components.component.get("fileFormat"));
         if (fileFormatField.getSelectedItem().toString().compareTo("Trivial Graph Format") == 0) {
             outputFormat = OutputType.TRIVIAL;
@@ -97,31 +90,16 @@ public class GenerateActionListener implements ActionListener {
             outputFormat = OutputType.ADJACENCY;
         }
 
+        OutputParser op = new OutputParser(g, outputFormat, dir);
+        try {
+            op.generateOutput();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GenerateActionListener.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        // TODO Thread
-
-//        Runnable doWorkRunnable = new Runnable() {
-//
-//            @Override
-//            public void run() {
-                Graph graf = g.getGraph();
-                for (Edge edge : graf.getEdges()) {
-                    System.out.println(edge);
-                }
-
-                OutputParser op = new OutputParser(g, outputFormat, dir);
-                try {
-                    op.generateOutput();
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(GenerateActionListener.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                ta.setText("In progress...                            [ 100% ]\n"
-                         + "Graph complete...                         in file: [ " + dir + " ]\n\n" + ta.getText() );
-                generateButton.setEnabled(true);
-                stopButton.setVisible(false);
-//            }
-//        };
+        ta.setText("In progress...                            [ 100% ]\n"
+                + "Graph complete...                         in file: [ " + dir + " ]\n\n" + ta.getText());
+        generateButton.setEnabled(true);
 
     }
 
@@ -149,8 +127,8 @@ public class GenerateActionListener implements ActionListener {
                 n = IntegerRequiredValidator.isValid((JTextField) Components.component.get("nVertexCount"));
                 nVertexCountErrMsg.setVisible(false);
                 inputSettings.setN(n);
-                
-                
+
+
             } catch (IntegerValidatorException ex) {
                 nVertexCountErrMsg.setVisible(true);
                 status = false;
@@ -164,8 +142,7 @@ public class GenerateActionListener implements ActionListener {
                 mVertexCountErrMsg.setVisible(true);
                 status = false;
             }
-            // TODO /////////////////////////////////////////////////
-            inputSettings.setNodeCount(n + m);
+           
         }
 
 

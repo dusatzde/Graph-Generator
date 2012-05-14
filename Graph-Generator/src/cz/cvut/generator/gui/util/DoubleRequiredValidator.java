@@ -16,8 +16,6 @@ public class DoubleRequiredValidator {
         String text = textField.getText();
         try{
             double value = Double.parseDouble(text);
-            if(value <= 0)
-                throw new DoubleValidatorException("Invalid format!");
             return value;
         }catch(NumberFormatException e){
             throw new DoubleValidatorException("Invalid format!");

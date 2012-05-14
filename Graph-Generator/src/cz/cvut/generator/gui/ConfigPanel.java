@@ -242,22 +242,32 @@ public class ConfigPanel extends JPanel {
                 if (button.equals(bipartiteGraphType)) {
                     
                     if (((JRadioButton)button).isSelected()) {
+                        n_vertex_label.setEnabled(true);
+                        m_vertex_label.setEnabled(true);
                         n_vertex_count.setEditable(true);
                         m_vertex_count.setEditable(true);
+                        vertex_count_label.setEnabled(false);
                         vertex_count.setEditable(false);
                         vertex_count_err_msg.setEnabled(false);
                     } else {
+                        n_vertex_label.setEnabled(false);
+                        m_vertex_label.setEnabled(false);
                         n_vertex_count.setEditable(false);
                         m_vertex_count.setEditable(false);
                         n_vertex_count_err_msg.setVisible(false);
                         m_vertex_count_err_msg.setVisible(false);
+                        vertex_count_label.setEnabled(true);
                         vertex_count.setEditable(true);
                     }
                 }else if(button.equals(weighted)){
                     if (((JCheckBox)button).isSelected()) {
                         min_weight.setEditable(true);
                         max_weight.setEditable(true);
+                        min_weight_label.setEnabled(true);
+                        max_weight_label.setEnabled(true);
                     } else {
+                        min_weight_label.setEnabled(false);
+                        max_weight_label.setEnabled(false);
                         min_weight.setEditable(false);
                         max_weight.setEditable(false);
                         min_weight_err_msg.setEnabled(false);

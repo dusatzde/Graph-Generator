@@ -169,6 +169,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         int edgeCount;
         Node a;
         Edge e;
+        System.out.println("N: " + bipartiteNodeCountP1 + " M: " + bipartiteNodeCountP2);
         nodeCount = bipartiteNodeCountP1 + bipartiteNodeCountP2;
         boolean[] usedNodes = new boolean[nodeCount];
         ArrayList<Node> part1 = new ArrayList(Arrays.asList(nodes));
