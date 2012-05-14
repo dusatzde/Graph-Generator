@@ -5,19 +5,16 @@
 package cz.cvut.generator.gui;
 
 import cz.cvut.generator.gui.util.Components;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Insets;
-import java.awt.LayoutManager;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
+import javax.swing.text.DefaultCaret;
 
 /**
  *
@@ -25,7 +22,7 @@ import javax.swing.border.EmptyBorder;
  */
 public class LogPanel extends JTabbedPane{
     
-    private  JTextArea ta;
+    private JTextArea ta;
     private JComponent logPanel;
     
     public LogPanel(){
@@ -35,6 +32,8 @@ public class LogPanel extends JTabbedPane{
     
     private void init(){
         ta = new JTextArea();
+        DefaultCaret caret = (DefaultCaret)ta.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         ta.setName("LogTextArea");
         Components.component.put(ta.getName(), ta);
         ta.setText("Welcome. Choose type and size of your graph...");

@@ -6,6 +6,7 @@ package cz.cvut.generator.gui;
 
 import cz.cvut.generator.gui.listeners.GenerateActionListener;
 import cz.cvut.generator.gui.util.Components;
+import cz.cvut.generator.gui.util.ExtensionFileFilter;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -19,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileFilter;
 
 /**
  *
@@ -33,7 +35,6 @@ public class OutputPanel extends JPanel implements ActionListener{
     private JLabel file_path_label = new JLabel("Path:");
     private JTextField dir = new JTextField(10);
     private JButton browseButton = new JButton("Browse");
-    private JButton stopButton = new JButton("Stop");
     private JButton generateButton = new JButton("Generate");  
     private Border border;
     private JLabel file_path_err_msg = new JLabel("<html><span style='color: red;'>File name and path required!</span></html>");
@@ -52,7 +53,6 @@ public class OutputPanel extends JPanel implements ActionListener{
          Components.component.put("dir", dir);
          dir.setSize(20, 40);
          Components.component.put("generateButton", generateButton);
-         Components.component.put("stopButton", stopButton);
          Components.component.put("filePathErrMsg", file_path_err_msg);
          Components.component.put("fileFormat", file_format);
     }
@@ -94,11 +94,6 @@ public class OutputPanel extends JPanel implements ActionListener{
         gbc.insets = new Insets(180, 10, 3, 5);
         this.add(generateButton, gbc);
         
-        gbc.gridx = 1;
-        gbc.gridy= 5;
-        gbc.insets = new Insets(180, 10, 3, 5);
-        stopButton.setVisible(false);
-        this.add(stopButton, gbc);
     }
     
     private void componentsInit(){
@@ -118,7 +113,21 @@ public class OutputPanel extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd.equals("browse")) {
-            JFileChooser c = new JFileChooser();
+            JFileChooser c = new JFileChooser(".");
+            String format = file_format.getSelectedItem().toString();
+            FileFilter fileFilter = null;
+            if(format.compareTo("XML") == 0){
+                fileFilter = new ExtensionFileFilter("XML", new String[] { "xml"});
+            }else if(format.compareTo("DOT") == 0){
+                fileFilter = new ExtensionFileFilter("DOT", new String[] { "dot"});
+            }else{
+                fileFilter = new ExtensionFileFilter("TXT", new String[] { "txt"});
+            }
+
+            c.setFileFilter(fileFilter);
+            c.setAcceptAllFileFilterUsed(false);
+            c.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
             file_path_err_msg.setVisible(false);
             int rVal = c.showSaveDialog(this);
             if (rVal == JFileChooser.APPROVE_OPTION) {

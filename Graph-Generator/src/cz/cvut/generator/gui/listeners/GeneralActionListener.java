@@ -4,13 +4,11 @@
  */
 package cz.cvut.generator.gui.listeners;
 
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JEditorPane;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -48,7 +46,6 @@ public class GeneralActionListener implements ActionListener{
             textArea.setBackground(msgPanel.getBackground());
             JEditorPane link = new JEditorPane("text/html", "<html>Project wiki pages are  <a href=\"https://github.com/dusatzde/Graph-Generator/wiki\">https://github.com/dusatzde/Graph-Generator/wiki</a></html> ");
             link.setBackground(msgPanel.getBackground());
-           // JLabel link = new JLabel("<html>Project wiki pages are  <a href=\"https://github.com/dusatzde/Graph-Generator/wiki\">https://github.com/dusatzde/Graph-Generator/wiki</a></html> ");
             msgPanel.setLayout(new GridLayout(2, 1));
             msgPanel.add(textArea);
             msgPanel.add(link);
