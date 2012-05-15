@@ -37,7 +37,6 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     }
 
     public void initialize() {
-        generateNodes();
         edgeList = new ArrayList<Edge>();
         if (properties.contains(GraphType.DIRECTED)) {
             directed = true;
@@ -50,6 +49,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         } else {
             graphType = properties.get(0);
         }
+        if(graphType == GraphType.BIPARTITE) nodeCount = bipartiteNodeCountP1 + bipartiteNodeCountP2; 
+        generateNodes();
     }
 
     //TODO
@@ -153,12 +154,14 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
             else notUsed.add(a);
         }
         //multiplicity check for undirected graph
-        ArrayList<Edge> multEdges = new ArrayList<Edge>();
-        for(Edge ed: edgeList){
-            if(edgeList.contains(new Edge(ed.getNodeTo(), ed.getNodeFrom())))multEdges.add(ed);
-        }
-        for(Edge ed: multEdges){
-            edgeList.remove(ed);
+        if(!directed){
+            ArrayList<Edge> multEdges = new ArrayList<Edge>();
+            for(Edge ed: edgeList){
+                if(edgeList.contains(new Edge(ed.getNodeTo(), ed.getNodeFrom())))multEdges.add(ed);
+            }
+            for(Edge ed: multEdges){
+                edgeList.remove(ed);
+            }
         }
     }
 
@@ -170,7 +173,6 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         Node a;
         Edge e;
         System.out.println("N: " + bipartiteNodeCountP1 + " M: " + bipartiteNodeCountP2);
-        nodeCount = bipartiteNodeCountP1 + bipartiteNodeCountP2;
         boolean[] usedNodes = new boolean[nodeCount];
         ArrayList<Node> part1 = new ArrayList(Arrays.asList(nodes));
         ArrayList<Node> part2 = new ArrayList<Node>();
@@ -179,11 +181,11 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         for (int i = 0; i < part2size; i++) {
             part2.add(part1.remove(rand.nextInt(part1.size())));
         }
-        maxEdgeCountPart1 = 3 * (int) Math.sqrt(part2.size());
-        maxEdgeCountPart2 = 3 * (int) Math.sqrt(part1.size());
+        maxEdgeCountPart1 = bipartiteNodeCountP1;
+        maxEdgeCountPart2 = bipartiteNodeCountP2;
         //generate edges coming from part1 nodes
         for (Node n : part1) {
-            edgeCount = rand.nextInt(maxEdgeCountPart1);
+            edgeCount = rand.nextInt(nodeCount - 1) + 1;
             //erase used flags
             for (int i = 0; i < nodeCount; i++) {
                 usedNodes[i] = false;
@@ -199,7 +201,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         }
         //generate edges coming from part2 nodes
         for (Node n : part2) {
-            edgeCount = rand.nextInt(maxEdgeCountPart2);
+            edgeCount = rand.nextInt(bipartiteNodeCountP2 - 1) + 1;
             //erase used flags
             for (int i = 0; i < nodeCount; i++) {
                 usedNodes[i] = false;
@@ -211,6 +213,16 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
                     edgeList.add(e);
                 }
                 usedNodes[(int) a.getId()] = true;
+            }
+        }
+        //multiplicity check for undirected graph
+        if(!directed){
+            ArrayList<Edge> multEdges = new ArrayList<Edge>();
+            for(Edge ed: edgeList){
+                if(edgeList.contains(new Edge(ed.getNodeTo(), ed.getNodeFrom())))multEdges.add(ed);
+            }
+            for(Edge ed: multEdges){
+                edgeList.remove(ed);
             }
         }
     }
