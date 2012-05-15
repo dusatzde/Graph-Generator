@@ -19,7 +19,6 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     private int bipartiteNodeCountP2;
     private double minWeight;                   //minimal weight of edge
     private double maxWeight;                   //maximal weight of edge
-    private int componentCount;                 //number of graph components
     private ArrayList<GraphType> properties;    //list of graph properties
     private Node[] nodes;
     private ArrayList<Node> nodeList;
@@ -56,10 +55,8 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     //TODO
     public void generate() {
         initialize();
-        System.out.println("TYPE: " + graphType);
         switch (graphType) {
             case COMPLETE:
-                System.out.println("HERE COMPLETE");
                 generateComplete();
                 break;
             case SIMPLE:
@@ -167,12 +164,9 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
 
 
     public void generateBipartite() {
-        int maxEdgeCountPart1;
-        int maxEdgeCountPart2;
         int edgeCount;
         Node a;
         Edge e;
-        System.out.println("N: " + bipartiteNodeCountP1 + " M: " + bipartiteNodeCountP2);
         boolean[] usedNodes = new boolean[nodeCount];
         ArrayList<Node> part1 = new ArrayList(Arrays.asList(nodes));
         ArrayList<Node> part2 = new ArrayList<Node>();
@@ -181,8 +175,6 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         for (int i = 0; i < part2size; i++) {
             part2.add(part1.remove(rand.nextInt(part1.size())));
         }
-        maxEdgeCountPart1 = bipartiteNodeCountP1;
-        maxEdgeCountPart2 = bipartiteNodeCountP2;
         //generate edges coming from part1 nodes
         for (Node n : part1) {
             edgeCount = rand.nextInt(nodeCount - 1) + 1;
@@ -323,24 +315,24 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         }
         
         //filling more edges for directed graph
-        if(directed){
-            int outEdgesCount;
-            int maxDensity = 3*(int)Math.sqrt(nodeCount); //maximal number of edges from one node
-            int fillingConstant = rand.nextInt(nodeCount);
-            for(int i = 0; i < fillingConstant; i++){
-                a = nodes[rand.nextInt(nodeCount)];
-                outEdgesCount = rand.nextInt(maxDensity);
-                for(int j = 0; j < outEdgesCount; j++){
-                    b = nodes[rand.nextInt(nodeCount)];
-                    //check cycle originating
-                    if(!cycleDetect.get(a).contains(b)){
-                        edgeList.add(new Edge(a, b));
-                        cycleDetect.get(b).addAll(cycleDetect.get(a));
-                    }
-                }
-            }
-            //break originated cycles
-        }
+//        if(directed){
+//            int outEdgesCount;
+//            int maxDensity = 3*(int)Math.sqrt(nodeCount); //maximal number of edges from one node
+//            int fillingConstant = rand.nextInt(nodeCount);
+//            for(int i = 0; i < fillingConstant; i++){
+//                a = nodes[rand.nextInt(nodeCount)];
+//                outEdgesCount = rand.nextInt(maxDensity);
+//                for(int j = 0; j < outEdgesCount; j++){
+//                    b = nodes[rand.nextInt(nodeCount)];
+//                    //check cycle originating
+//                    if(!cycleDetect.get(a).contains(b)){
+//                        edgeList.add(new Edge(a, b));
+//                        cycleDetect.get(b).addAll(cycleDetect.get(a));
+//                    }
+//                }
+//            }
+//            //break originated cycles
+//        }
         
     }
 
@@ -373,28 +365,7 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         }
     }
 
-    //TO ERASE
-    //dummy method for parser testing
-    public void generateFullDummy() {
-        int nodeCount = 1000;   //set number of nodes as you wish
-
-        ArrayList<Edge> edges = new ArrayList<Edge>();
-        ArrayList<Node> nodesList = new ArrayList<Node>();
-        Node[] nodes = new Node[nodeCount];
-        for (int i = 0; i < nodeCount; i++) {
-            nodes[i] = new Node(i + 1, "N:" + (i + 1));
-            nodesList.add(nodes[i]);
-        }
-        for (int i = 0; i < nodeCount; i++) {
-            for (int j = i + 1; j < nodeCount; j++) {
-                edges.add(new Edge(nodes[i], nodes[j]));
-            }
-        }
-
-        g.setDirected(false);
-        g.setEdges(edges);
-        g.setNodes(nodesList);
-    }
+    
 
     private void prepareOutputGraph() {
         if (weighted) {
@@ -432,11 +403,6 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
     @Override
     public void setMaxEdgeWeight(double weight) {
         this.maxWeight = weight;
-    }
-
-    @Override
-    public void setComponentCount(int componentCount) {
-        this.componentCount = componentCount;
     }
 
     public List<GraphType> getProperties() {

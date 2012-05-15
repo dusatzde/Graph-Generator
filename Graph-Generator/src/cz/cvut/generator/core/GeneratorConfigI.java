@@ -17,7 +17,6 @@ public interface GeneratorConfigI {
     public void setProperties(List<GraphType> property);
     public void setMinEdgeWeight(double weight);
     public void setMaxEdgeWeight(double weight);
-    public void setComponentCount(int componentCount);
     public void setBipartiteNodesCount(int part1, int part2);
     
 
