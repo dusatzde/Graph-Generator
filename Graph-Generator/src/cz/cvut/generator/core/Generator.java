@@ -9,7 +9,7 @@ import java.util.*;
 
 /**
  *
- * @author ZDENEK
+ * @author Jan Mikolasek, (Function Tree - Jakub Levy)
  */
 public class Generator implements GeneratorOutputI, GeneratorConfigI {
 
@@ -336,6 +336,9 @@ public class Generator implements GeneratorOutputI, GeneratorConfigI {
         
     }
 
+    /*
+     * Generating random Tree
+     */
 
     public void generateTree() {
         Random r = new Random();

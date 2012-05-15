@@ -5,14 +5,15 @@
 package cz.cvut.generator.graph;
 
 import cz.cvut.generator.core.Generator;
-import cz.cvut.generator.core.GeneratorOutputI;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  *
- * @author Lenovo
+ * @author Jakub Levy
  */
 public class OutputParser {
 
@@ -47,12 +48,15 @@ public class OutputParser {
                 generateXML();
                 break;
             default:
-                System.out.println("Incorrect output type");
+                System.err.println("Incorrect output type");
         }
     }
+    
+    /*
+     * Generating in Trivial Graph format
+     */
 
     private void generateTrivialOutput() throws FileNotFoundException {
-        System.out.println("Start of generating output file - Trivial Graph");
         PrintWriter out = new PrintWriter(new FileOutputStream(path));
         Graph g = this.gen.getGraph();
         List<Node> nodes = g.getNodes();
@@ -75,13 +79,14 @@ public class OutputParser {
         out.close();
     }
 
+    /*
+     * Generating in Adjacency matrix format output
+     */
+    
     private void generateAdjacencyOutput() throws FileNotFoundException {
-        System.out.println("Start of generating output file - Adjacency matrix");
-
         PrintWriter out = new PrintWriter(new FileOutputStream(path));
 
         Graph g = this.gen.getGraph();
-        List<GraphType> properties = gen.getProperties();
         List<Node> nodes = g.getNodes();
         List<Edge> edges = g.getEdges();
         boolean weighted;
@@ -102,6 +107,13 @@ public class OutputParser {
         Edge e;
         int from, to;
 
+        /*
+         * Generating:
+         * if(weighted) - weighted, directed
+         * if(weighted) if(!directed) - weighted, not directed
+         * else if(directed) - not weighted, directed
+         * else else - not weighted, not directed
+         */
 
         while (edgeIt.hasNext()) {
             e = edgeIt.next();
@@ -141,12 +153,14 @@ public class OutputParser {
             out.println("");
         }
 
-        System.out.println("End of generating adjacency matrix");
         out.close();
     }
+    
+    /*
+     * Generating in Incidence matrix format output  
+     */
 
     private void generateIncidenceOutput() throws FileNotFoundException {
-        System.out.println("Start of generating output file - Incidence matrix Graph");
         PrintWriter out = new PrintWriter(new FileOutputStream(path));
         Graph g = this.gen.getGraph();
         List<Node> nodes = g.getNodes();
@@ -180,6 +194,12 @@ public class OutputParser {
 
     }
 
+    
+    /*
+     * Generating in DOT format output
+     * Now only without setting place on screen
+     */
+    
     private void generateDOT() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(new FileOutputStream(path));
         List<Edge> edges = graph.getEdges();
@@ -194,13 +214,11 @@ public class OutputParser {
                 out.println(n.getId());
             }
             if (graph.isWeighted()) {
-                System.out.println("Start of generating output file - DOT (directed, weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
                     out.printf("%d -> %d[label=%.0f]\n", e.getNodeFrom().getId(), e.getNodeTo().getId(), e.getWeight());
                 }
             } else {
-                System.out.println("Start of generating output file - DOT (directed, not weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
                     out.printf("%d -> %d\n", e.getNodeFrom().getId(), e.getNodeTo().getId());
@@ -213,13 +231,11 @@ public class OutputParser {
                 out.println(n.getId());
             }
             if (graph.isWeighted()) {
-                System.out.println("Start of generating output file - DOT (not directed, weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
                     out.printf("%d -- %d[label=%.0f]\n", e.getNodeFrom().getId(), e.getNodeTo().getId(), e.getWeight());
                 }
             } else {
-                System.out.println("Start of generating output file - DOT (not directed, not weighted)");
                 while (it.hasNext()) {
                     Edge e = it.next();
                     out.printf("%d -- %d\n", e.getNodeFrom().getId(), e.getNodeTo().getId());
@@ -233,6 +249,9 @@ public class OutputParser {
         out.close();
     }
 
+    /*
+     * Generating XML format output
+     */
     private void generateXML() throws FileNotFoundException {
         PrintWriter out = new PrintWriter(new FileOutputStream(path));
         List<Edge> edges = graph.getEdges();
