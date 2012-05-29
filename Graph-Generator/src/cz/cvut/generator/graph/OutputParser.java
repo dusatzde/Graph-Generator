@@ -278,7 +278,7 @@ public class OutputParser {
         while (itn.hasNext()) {
             Node n = itn.next();
             out.println("      <node>");
-            out.println("         <name> " + n.getId() + " </name>");
+            out.println("         <name>" + n.getId() + "</name>");
             out.println("      </node>");
         }
         out.println("   </nodes>");
@@ -289,10 +289,10 @@ public class OutputParser {
         while (ite.hasNext()) {
             Edge e = ite.next();
             out.println("      <edge>");
-            out.println("         <nodeFrom> " + e.getNodeFrom().getId() + " </nodeFrom>");
-            out.println("         <nodeTo> " + e.getNodeTo().getId() + " </nodeTo>");
+            out.println("         <nodeFrom>" + e.getNodeFrom().getId() + "</nodeFrom>");
+            out.println("         <nodeTo>" + e.getNodeTo().getId() + "</nodeTo>");
             if (graph.isWeighted()) {
-                out.printf("         <weight> %.0f </weight>\n", e.getWeight());
+                out.printf("         <weight>%.0f</weight>\n", e.getWeight());
             }
             out.println("      </edge>");
         }
